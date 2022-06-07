@@ -57,9 +57,8 @@ public class Renderer {
             if(gameObject instanceof ButtonObject buttonObject){
                 this.removeText(buttonObject.textObject);
             }
-            if(batch.removeGameObject(gameObject)) return;
+            if(batch.removeGameObject(gameObject)) break;
         }
-
     }
 
     /**

@@ -7,7 +7,9 @@ import org.joml.Vector4f;
 import utils.Assets;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
@@ -34,8 +36,7 @@ public class RenderBatch implements Comparable<RenderBatch> {
     protected final int VERTEX_SIZE = 10;
     protected final int VERTEX_SIZE_BYTES = VERTEX_SIZE * Float.BYTES;
 
-    protected List<GameObject> gameObjects;
-    protected int numSprites;
+    protected Set<GameObject> gameObjects;
     protected boolean hasRoom;
     protected float[] vertices;
     protected final int[] texSlots = {0, 1, 2, 3, 4, 5, 6, 7};
@@ -54,13 +55,12 @@ public class RenderBatch implements Comparable<RenderBatch> {
         this.isUIBatch = isUIBatch;
 
         //this.gameObjects = new GameObject[maxBatchSize];
-        this.gameObjects = new ArrayList<>();
+        this.gameObjects = new HashSet<>();
         this.maxBatchSize = maxBatchSize;
 
         // 4 vertices quads
         vertices = new float[maxBatchSize * 4 * VERTEX_SIZE];
 
-        this.numSprites = 0;
         this.hasRoom = true;
         this.textures = new ArrayList<>();
         this.zIndex = zIndex;
@@ -110,11 +110,8 @@ public class RenderBatch implements Comparable<RenderBatch> {
 
 
     public void addSprite(GameObject gameObject) {
-        // Get index and add renderObject
-        int index = this.numSprites;
         //this.gameObjects[index] = gameObject;
         this.gameObjects.add(gameObject);
-        this.numSprites++;
 
         if (gameObject.getSprite().texture != null) {
             if (!textures.contains(gameObject.getSprite().texture)) {
@@ -123,9 +120,9 @@ public class RenderBatch implements Comparable<RenderBatch> {
         }
 
         // Add properties to local vertices array
-        loadVertexProperties(index);
+        loadVertexProperties(gameObject);
 
-        if (numSprites >= this.maxBatchSize) {
+        if (gameObjects.size() >= this.maxBatchSize) {
             this.hasRoom = false;
         }
 
@@ -133,24 +130,17 @@ public class RenderBatch implements Comparable<RenderBatch> {
 
 
     public boolean removeGameObject(GameObject gameObject){
-        for(int i = 0; i < numSprites; i++){
-            if(gameObjects.get(i).equals(gameObject)){
-                gameObjects.remove(gameObject);
-                numSprites--;
-                return true;
-            }
-        }
-        return false;
+        return gameObjects.remove(gameObject);
     }
+
     public void render() {
         boolean rebuffer = false;
-        for (int i = 0; i < numSprites; i++) {
-            GameObject gameObject = this.gameObjects.get(i);
+        for(GameObject gameObject : gameObjects){
             if (gameObject.isDirty()) {
                 if (gameObject.getSprite().texture != null && !this.textures.contains(gameObject.getSprite().texture)) {
                     this.textures.add(gameObject.getSprite().texture);
                 }
-                loadVertexProperties(i);
+                loadVertexProperties(gameObject);
                 gameObject.markDirty(false);
 
 
@@ -178,7 +168,7 @@ public class RenderBatch implements Comparable<RenderBatch> {
         glEnableVertexAttribArray(0);
         glEnableVertexAttribArray(1);
 
-        glDrawElements(GL_TRIANGLES, this.numSprites * 6, GL_UNSIGNED_INT, 0);
+        glDrawElements(GL_TRIANGLES, gameObjects.size() * 6, GL_UNSIGNED_INT, 0);
 
         glDisableVertexAttribArray(0);
         glDisableVertexAttribArray(1);
@@ -190,12 +180,11 @@ public class RenderBatch implements Comparable<RenderBatch> {
         shader.detach();
     }
 
-    protected void loadVertexProperties(int index) {
+    protected void loadVertexProperties(GameObject gameObject) {
         //GameObject gameObject = this.gameObjects[index];
-        GameObject gameObject = this.gameObjects.get(index);
 
         // Find offset within array (4 vertices per sprite)
-        int offset = index * 4 * VERTEX_SIZE;
+        int offset = (gameObjects.size() - 1) * 4 * VERTEX_SIZE;
 
         Vector4f color = gameObject.getSprite().color;
         Vector2f[] texCoords = gameObject.getSprite().getTexCoords();

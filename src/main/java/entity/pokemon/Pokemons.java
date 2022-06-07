@@ -6,13 +6,14 @@ import entity.PokemonEntity;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import static entity.pokemon.PokemonTypes.*;
 
 public class Pokemons {
 
-    public static final PokemonEntity PIKACHU = new PokemonEntity("pikachu");
-    public static final PokemonEntity BULBASAUR = new PokemonEntity("bulbasaur");
-    public static final PokemonEntity SQUIRTLE = new PokemonEntity("squirtle");
-    public static final PokemonEntity CHARMANDER = new PokemonEntity("charmander");
+    public static final PokemonEntity PIKACHU = new PokemonEntity("pikachu", ELECTRIC);
+    public static final PokemonEntity BULBASAUR = new PokemonEntity("bulbasaur", GRASS);
+    public static final PokemonEntity SQUIRTLE = new PokemonEntity("squirtle", WATER);
+    public static final PokemonEntity CHARMANDER = new PokemonEntity("charmander", FIRE);
 
     public static final List<PokemonEntity> pokemons = new ArrayList<>();
 

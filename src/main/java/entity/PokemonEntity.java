@@ -1,5 +1,6 @@
 package entity;
 
+import entity.pokemon.PokemonType;
 import events.EventBus;
 import events.PokemonDespawnEvent;
 import game.GameObject;
@@ -11,13 +12,17 @@ public class PokemonEntity extends GameObject {
 
     public String name;
     public boolean isPersistent = false;
-    public PokemonEntity(String name) {
+    public PokemonType type;
+
+    public PokemonEntity(String name, PokemonType type) {
         this.name = name;
+        this.type = type;
         this.sprite = new Sprite(64, 64, new Texture("assets/textures/pokemon/" + name + ".png"));
     }
 
     public PokemonEntity(PokemonEntity pokemon){
         this.name = pokemon.name;
+        this.type = pokemon.type;
         this.sprite = pokemon.sprite;
         this.isPersistent = pokemon.isPersistent;
     }

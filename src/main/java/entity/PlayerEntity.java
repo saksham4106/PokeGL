@@ -74,7 +74,6 @@ public class PlayerEntity extends GameObject {
         super.init();
     }
 
-
     @Override
     public void update(float dt) {
         Vector2f velocity = new Vector2f();
@@ -130,41 +129,31 @@ public class PlayerEntity extends GameObject {
         return false;
     }
 
-
     int counter = 20;
-    PokemonEntity targetPokemon;
+    PokemonEntity targetPokemon = null;
     @Override
     public void tick(){
         counter--;
         if(counter <= 0){
             if(isMoving){
-                if(random.nextInt(100) == 1){
-                    targetPokemon = new PokemonEntity(Pokemons.pokemons.get(random.nextInt(3)));
-                    Vector2f direction = new Vector2f(this.facing == EntityFacing.LEFT ? -1 :
-                            this.facing == EntityFacing.RIGHT ? 1 : 0,  this.facing == EntityFacing.UP ? 1 :
-                            this.facing == EntityFacing.DOWN ? -1 : 0);
-                    Vector2f position = new Vector2f(this.transform.position);
-                    position.add(direction.normalize().mul(80));
-                    targetPokemon.setTransform(new Transform(position.x, position.y,
-                            32, 32));
-                    this.world.pokemons.add(targetPokemon);
-                    Window.getCurrentScene().addGameObjectToScene(targetPokemon);
+                if(targetPokemon == null){
+                    if(random.nextInt(50) == 1){
+                        targetPokemon = new PokemonEntity(Pokemons.pokemons.get(random.nextInt(3)));
+                        Vector2f direction = new Vector2f(this.facing == EntityFacing.LEFT ? -1 :
+                                this.facing == EntityFacing.RIGHT ? 1 : 0,  this.facing == EntityFacing.UP ? 1 :
+                                this.facing == EntityFacing.DOWN ? -1 : 0);
+                        Vector2f position = new Vector2f(this.transform.position);
+                        position.add(direction.normalize().mul(80));
+                        targetPokemon.setTransform(new Transform(position.x, position.y,
+                                32, 32));
+                        this.world.pokemons.add(targetPokemon);
+                        Window.getCurrentScene().addGameObjectToScene(targetPokemon);
 
-//                    battleButton = new ButtonObject((int)this.transform.position.x, (int)this.transform.position.y - 20,
-//                            new Text("Battle!", Fonts.OPEN_SANS_FONT, new Vector4f(1, 1, 1, 1),
-//                                    0.1f), (button) -> {}, this.zIndex + 1, new Sprite(0, 0,
-//                            new Vector4f(0.6f, 0.6f, 0.6f, 1)), true);
-//                    Window.getCurrentScene().addGameObjectToScene(battleButton);
-                    counter = 20;
+                        counter = 20;
+                    }
                 }
             }
 
-
-//            float x1 = this.transform.position.x;
-//            float y1 = this.transform.position.y;
-//            Vector2f battleButtonPos = MathUtil.screenToWorld(MathUtil.NdcToScreen(battleButton.getTransform().position));
-//            float x2 = battleButtonPos.x;
-//            float y2 = battleButtonPos.y;
             if(targetPokemon != null){
                 float x1 = targetPokemon.getTransform().position.x;
                 float y1 = targetPokemon.getTransform().position.y;
@@ -172,7 +161,7 @@ public class PlayerEntity extends GameObject {
                 float y2 = this.transform.position.y;
 
                 float dist = (float) (Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
-                if(dist > 6400){
+                if(dist > 80 * 80){
                     if(Window.getCurrentScene().containsGameObject(battleButton)){
                         Window.getCurrentScene().removeGameObjectFromScene(battleButton);
                     }
@@ -204,7 +193,6 @@ public class PlayerEntity extends GameObject {
         this.animationState.clear();
         this.animationState.addFrames(currentSpriteSheet.sprites, (1/ speed) * 20);
     }
-
 
     @Event.EventHandler
     public void onPokemonDespawn(PokemonDespawnEvent event){

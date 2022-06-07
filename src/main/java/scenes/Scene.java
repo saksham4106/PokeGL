@@ -12,24 +12,20 @@ import renderer.Sprite;
 import renderer.Texture;
 import ui.ButtonObject;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public abstract class Scene {
 
-    public List<GameObject> sceneGameObjects;
-    public Set<GameObject> uniqueGameObjects;
+    public Set<GameObject> sceneGameObjects;
     public static PlayerEntity player;
 
     protected Renderer renderer;
     public Camera camera = new Camera(new Vector2f(0, 0));
 
     public Scene(){
+
         this.renderer = new Renderer();
-        this.sceneGameObjects = new ArrayList<>();
-        this.uniqueGameObjects = new HashSet<>();
+        this.sceneGameObjects = new HashSet<>();
     }
 
     public void addGameObjectToScene(GameObject gameObject){
@@ -40,20 +36,17 @@ public abstract class Scene {
             this.renderer.add(gameObject);
         }
         this.sceneGameObjects.add(gameObject);
-        this.uniqueGameObjects.add(gameObject);
     }
 
     public void removeGameObjectFromScene(GameObject gameObject){
-        if(this.containsGameObject(gameObject)){
-            this.sceneGameObjects.remove(gameObject);
-            this.uniqueGameObjects.remove(gameObject);
+        if(this.sceneGameObjects.remove(gameObject)) {
             this.renderer.removeGameObject(gameObject);
         }
     }
 
 
     public boolean containsGameObject(GameObject gameObject){
-        return this.uniqueGameObjects.contains(gameObject);
+        return this.sceneGameObjects.contains(gameObject);
     }
 
     public void init(){
@@ -65,9 +58,11 @@ public abstract class Scene {
      */
     @SuppressWarnings("ForLoopReplaceableByForEach")
     public void update(float dt){
-        for(int i = 0; i < this.sceneGameObjects.size(); i++){
-            this.sceneGameObjects.get(i).update(dt);
+        GameObject[] gameObjects = sceneGameObjects.toArray(new GameObject[0]);
+        for (int i = 0; i < gameObjects.length; i++) {
+            gameObjects[i].update(dt);
         }
+
     }
 
     public void destroy(){
@@ -79,8 +74,9 @@ public abstract class Scene {
      */
     @SuppressWarnings("ForLoopReplaceableByForEach")
     public void tick(){
-        for(int i = 0; i < this.sceneGameObjects.size(); i++){
-            this.sceneGameObjects.get(i).tick();
+        GameObject[] gameObjects = sceneGameObjects.toArray(new GameObject[0]);
+        for (int i = 0; i < gameObjects.length; i++) {
+            gameObjects[i].tick();
         }
     }
 

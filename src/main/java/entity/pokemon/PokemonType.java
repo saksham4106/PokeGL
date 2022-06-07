@@ -1,7 +1,5 @@
 package entity.pokemon;
 
-import java.util.function.Supplier;
-
 public class PokemonType {
     public String name;
 
@@ -21,15 +19,18 @@ public class PokemonType {
         this.name = name;
     }
 
-    public void setDoesNoDamageTo(PokemonType[] doesNoDamageTo) {
-        this.doesNoDamageTo = doesNoDamageTo;
+    public PokemonType setDoesNoDamageTo(PokemonType... pokemonTypes) {
+        this.doesNoDamageTo = pokemonTypes;
+        return this;
     }
 
-    public void setDoesLessDamageTo(PokemonType[] doesLessDamageTo) {
+    public PokemonType setDoesLessDamageTo(PokemonType... doesLessDamageTo) {
         this.doesLessDamageTo = doesLessDamageTo;
+        return this;
     }
 
-    public void setDoesHighDamageTo(PokemonType[] doesHighDamageTo) {
+    public PokemonType setDoesHighDamageTo(PokemonType... doesHighDamageTo) {
         this.doesHighDamageTo = doesHighDamageTo;
+        return this;
     }
 }
