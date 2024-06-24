@@ -17,15 +17,21 @@ import java.util.*;
 public abstract class Scene {
 
     public Set<GameObject> sceneGameObjects;
+    private Set<GameObject> removeableGameObjects;
     public static PlayerEntity player;
 
     protected Renderer renderer;
     public Camera camera = new Camera(new Vector2f(0, 0));
 
+    public boolean throwaway = false;
+    public String sceneName;
+
+
     public Scene(){
 
         this.renderer = new Renderer();
         this.sceneGameObjects = new HashSet<>();
+        this.removeableGameObjects = new HashSet<>();
     }
 
     public void addGameObjectToScene(GameObject gameObject){
@@ -38,10 +44,14 @@ public abstract class Scene {
         this.sceneGameObjects.add(gameObject);
     }
 
-    public void removeGameObjectFromScene(GameObject gameObject){
-        if(this.sceneGameObjects.remove(gameObject)) {
-            this.renderer.removeGameObject(gameObject);
+    public void addGameObjectstoScene(GameObject... gameObjects){
+        for (GameObject gameObject : gameObjects) {
+            this.addGameObjectToScene(gameObject);
         }
+    }
+
+    public void removeGameObjectFromScene(GameObject gameObject){
+        removeableGameObjects.add(gameObject);
     }
 
 
@@ -52,20 +62,26 @@ public abstract class Scene {
     public void init(){
     }
 
-    /*
-    For each loop will cause ConcurrentModificationException, Shut up Intellij.
-    (Update method of a gameObject might modify the list sceneGameObjects)
-     */
-    @SuppressWarnings("ForLoopReplaceableByForEach")
     public void update(float dt){
-        GameObject[] gameObjects = sceneGameObjects.toArray(new GameObject[0]);
-        for (int i = 0; i < gameObjects.length; i++) {
-            gameObjects[i].update(dt);
+        Iterator<GameObject> gameObjectIterator = sceneGameObjects.iterator();
+        while(gameObjectIterator.hasNext()){
+            GameObject gameObject = gameObjectIterator.next();
+            gameObject.update(dt, this.renderer);
+            if(removeableGameObjects.contains(gameObject)){
+                gameObjectIterator.remove();
+                removeableGameObjects.remove(gameObject);
+                this.renderer.removeGameObject(gameObject);
+            }
         }
 
+//        GameObject[] gameObjects = sceneGameObjects.toArray(new GameObject[0]);
+//        for (int i = 0; i < gameObjects.length; i++) {
+//            gameObjects[i].update(dt);
+//        }
     }
 
     public void destroy(){
+        if(throwaway) Window.removeScene(this.sceneName);
     }
 
     /*

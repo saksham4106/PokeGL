@@ -12,6 +12,10 @@ import scenes.MainScene;
 import scenes.Scene;
 import scenes.StartingMenuScene;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
@@ -23,20 +27,18 @@ public class Window {
     private long window;
     public static Logger LOGGER = LoggerFactory.getLogger(Window.class);
     private static Scene currentScene;
+    private static Map<String, Scene> scenes = new HashMap<>();
     public static AudioContext audioContext = new AudioContext();
 
     private boolean isResized = true;
-    public static float fps;
 
     public Window() {
         width = 1366;
         height = 706;
-        this.title = "XYZ game";
+        this.title = "PokeGL";
     }
 
-    public void run() {
-        //LOGGER.info("LWJGL:  " + Version.getVersion());
-
+    public void run(){
         init();
         loop();
 
@@ -84,15 +86,46 @@ public class Window {
         audioContext.initialise();
         GL.createCapabilities();
 
-        setScene(new StartingMenuScene());
+        populateScenes();
+        setScene("starting_menu", new StartingMenuScene());
+
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     }
 
-    public static void setScene(Scene scene) {
-        if (currentScene != null) currentScene.destroy();
+    private void populateScenes(){
+        scenes.put("starting_menu", null);
+        scenes.put("main", null);
+        scenes.put("battle", null);
+    }
+
+    private static void setScene(Scene scene, boolean initialise) {
+        if (currentScene != null){
+            if(currentScene.throwaway){
+                currentScene.destroy();
+            }
+        }
         currentScene = scene;
-        currentScene.init();
+        if(initialise){
+            currentScene.init();
+        }
+    }
+
+    public static void removeScene(String sceneName){
+        scenes.put(sceneName, null);
+    }
+
+    // sceneInstance is nullable
+    public static void setScene(String sceneName, Scene sceneInstance){
+        Scene scene = scenes.get(sceneName);
+        if(scene != null){
+            setScene(scene, false);
+        }else{
+            if(sceneInstance != null){
+                scenes.put(sceneInstance.sceneName, sceneInstance);
+                setScene(sceneInstance, true);
+            }
+        }
     }
 
     public static Scene getCurrentScene() {
@@ -100,22 +133,19 @@ public class Window {
     }
 
     public void loop() {
+
         float beginTime = (float) glfwGetTime();
 
         double lastTime = glfwGetTime();
-//        int nbFrames = 0;
 
         float endTime;
         float dt = -1.0f;
 
+
         while (!glfwWindowShouldClose(window)) {
             double currentTime = glfwGetTime();
-//            nbFrames++;
             if (currentTime - lastTime >= 0.05) {
-//                fps = nbFrames;
                 currentScene.tick();
-//                nbFrames = 0;
-                lastTime += 0.05;
             }
             glfwPollEvents();
 

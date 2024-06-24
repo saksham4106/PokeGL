@@ -2,6 +2,7 @@ package ui;
 
 import fonts.Character;
 import fonts.FontLoader;
+import fonts.Fonts;
 import fonts.Text;
 import game.GameObject;
 import game.Transform;
@@ -9,7 +10,9 @@ import org.joml.Vector4f;
 import renderer.Sprite;
 import renderer.Texture;
 import utils.Assets;
+import utils.ColorUtils;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +32,10 @@ public class TextObject {
     public float bottomEnd = 0;
     public Vector4f color;
     public float spacePadding;
+
+    public TextObject(float x, float y, String text, boolean isUIElement){
+        this(x,y, 1, text, Fonts.ATARI_CLASSIC_FONT, 100, isUIElement, ColorUtils.getColor(Color.WHITE));
+    }
 
     public TextObject(float x, float y, float scale, String text, FontLoader fontLoader, int zIndex, boolean isUIElement, Vector4f color) {
         super();
@@ -92,6 +99,7 @@ public class TextObject {
             this.bottomEnd = Math.max(bottomEnd, yOffset);
             totalHeight = Math.max(totalHeight, character.height * scale + yOffset);
         }
+
 
     }
 

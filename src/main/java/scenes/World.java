@@ -16,7 +16,6 @@ import java.util.Map;
 public class World{
 
     public Map<TilePosition, GameObject> worldmap;
-    //public List<GameObject> collidableTiles = new ArrayList<>();
     public List<GameObject> collidableBlocks;
     public List<PokemonEntity> pokemons;
 
@@ -44,7 +43,7 @@ public class World{
         for (int tileID : parser.data) {
             Sprite sprite = new Sprite(parser.tileWidth, parser.tileHeight, parser.texture);
             sprite.setTexCoords(parser.texCoordGenerator(tileID - 1));
-            int zIndex = parser.zIndices.size() > 0 ? parser.zIndices.get(currentLayer) : 0;
+            int zIndex = !parser.zIndices.isEmpty() ? parser.zIndices.get(currentLayer) : 0;
             GameObject tile = new GameObject(new Transform(startX + x * tileWidth, startY + y * tileHeight, tileWidth, tileHeight), sprite, zIndex);
             if ((tileID == 1)) {
                 tile.setCollidable(true);

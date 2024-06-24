@@ -1,6 +1,7 @@
 package game;
 
 import org.joml.Vector2f;
+import renderer.Renderer;
 import renderer.Sprite;
 import utils.MathUtil;
 
@@ -49,7 +50,7 @@ public class GameObject {
 
     }
 
-    public void update(float dt){
+    public void update(float dt, Renderer renderer){
 
     }
 

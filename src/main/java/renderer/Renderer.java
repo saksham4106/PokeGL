@@ -26,7 +26,7 @@ public class Renderer {
     public void add(GameObject gameObject, Shader shader) {
         boolean added = false;
         for (RenderBatch batch : batches) {
-            if (batch.hasRoom() && batch.zIndex == gameObject.zIndex && batch.isUIBatch == gameObject.isUIElement()) {
+            if (batch.hasRoom() && batch.zIndex == gameObject.zIndex) {
                 if (gameObject.getSprite().texture == null || batch.textures.contains(gameObject.getSprite().texture) || batch.textures.size() < 8) {
                     if(batch.shader.equals(shader)){
                         batch.addSprite(gameObject);
@@ -39,7 +39,7 @@ public class Renderer {
 
         if (!added) {
             RenderBatch newBatch;
-            newBatch = new RenderBatch(batchSize, gameObject.zIndex, shader, gameObject.isUIElement());
+            newBatch = new RenderBatch(batchSize, gameObject.zIndex, shader);
 
             newBatch.start();
             batches.add(newBatch);

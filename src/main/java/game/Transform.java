@@ -26,6 +26,15 @@ public class Transform {
         this.scale = new Vector2f(width, height);
     }
 
+    public Transform(Vector2f coords, float width, float height){
+        this(coords, new Vector2f(width, height));
+    }
+
+    public Transform(float x, float y, Vector2f scale){
+        this(new Vector2f(x, y), scale);
+    }
+
+
     public Vector2f getCenter(){
         return new Vector2f(this.position.x + (this.scale.x / 2), this.position.y + (this.scale.y / 2));
     }

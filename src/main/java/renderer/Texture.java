@@ -12,7 +12,7 @@ import static org.lwjgl.stb.STBImage.stbi_image_free;
 import static org.lwjgl.stb.STBImage.stbi_load_from_memory;
 
 public class Texture {
-    private final String filepath;
+    public final String filepath;
     private final int texID;
     private int width, height;
 

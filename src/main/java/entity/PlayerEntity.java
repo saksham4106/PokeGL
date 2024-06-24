@@ -2,6 +2,7 @@ package entity;
 
 import animation.AnimationState;
 import callback.KeyEventListener;
+import collision.CollisionDetection;
 import entity.pokemon.Pokemons;
 import events.Event;
 import events.PokemonDespawnEvent;
@@ -10,6 +11,7 @@ import game.GameObject;
 import game.Transform;
 import game.Window;
 import org.joml.Vector2f;
+import renderer.Renderer;
 import renderer.Sprite;
 import renderer.Spritesheet;
 import renderer.Texture;
@@ -17,8 +19,9 @@ import scenes.BattleScene;
 import scenes.World;
 import ui.ButtonObject;
 import utils.Assets;
-import utils.CollisionDetection;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -36,6 +39,9 @@ public class PlayerEntity extends GameObject {
     public final float speed = 50;
     public World world;
     public String name;
+    private List<PokemonEntity> poketeam;
+    private List<PokemonEntity> pokemons;
+
 
     ButtonObject battleButton;
 
@@ -47,22 +53,24 @@ public class PlayerEntity extends GameObject {
 
     public PlayerEntity(int width, int height, Vector2f position, int zIndex, Texture texture, World world){
         super(new Transform(position, new Vector2f(width, height)), new Sprite(width, height, texture), zIndex);
-        upSpriteSheet = Assets.getSpritesheet("assets/textures/playerUp.png",
-                new Spritesheet(Assets.getTexture("assets/textures/playerUp.png"), 68, 48, 4));
+        upSpriteSheet = Assets.getSpritesheet("", new Spritesheet(Assets.getTexture("assets/textures/playerUp.png"),
+                68, 48, 4));
 
-        downSpriteSheet = Assets.getSpritesheet("assets/textures/playerDown.png",
-                new Spritesheet(Assets.getTexture("assets/textures/playerDown.png"), 68, 48, 4));
+        downSpriteSheet = Assets.getSpritesheet("", new Spritesheet(Assets.getTexture("assets/textures/playerDown.png"),
+                68, 48, 4));
 
-        leftSpriteSheet = Assets.getSpritesheet("assets/textures/playerLeft.png",
-                new Spritesheet(Assets.getTexture("assets/textures/playerLeft.png"), 68, 48, 4));
+        leftSpriteSheet = Assets.getSpritesheet("", new Spritesheet(Assets.getTexture("assets/textures/playerLeft.png"),
+                68, 48, 4));
 
-        rightSpriteSheet = Assets.getSpritesheet("assets/textures/playerRight.png",
-                new Spritesheet(Assets.getTexture("assets/textures/playerRight.png"), 68, 48, 4));
+        rightSpriteSheet = Assets.getSpritesheet("", new Spritesheet(Assets.getTexture("assets/textures/playerRight.png"),
+                68, 48, 4));
 
         currentSpriteSheet = downSpriteSheet;
         this.hitbox = new Transform(position.x - 1, position.y + 2, width - 2, height/(float)2);
         this.world = world;
         this.name = "Player 1";
+        this.poketeam = new ArrayList<>();
+        this.pokemons = new ArrayList<>();
         this.init();
     }
 
@@ -75,7 +83,7 @@ public class PlayerEntity extends GameObject {
     }
 
     @Override
-    public void update(float dt) {
+    public void update(float dt, Renderer renderer) {
         Vector2f velocity = new Vector2f();
 
         if(KeyEventListener.isKeyPressed(GLFW_KEY_W)){
@@ -129,8 +137,14 @@ public class PlayerEntity extends GameObject {
         return false;
     }
 
-    int counter = 20;
+
     PokemonEntity targetPokemon = null;
+    Spritesheet pokemonSpritesheet = Assets.getSpritesheet("assets/frontFaces.png",
+            new Spritesheet(Assets.getTexture("assets/frontFaces.png"), 96, 96, 721));
+    Spritesheet backSpritesheet = Assets.getSpritesheet("assets/backFaces.png",
+            new Spritesheet(Assets.getTexture("assets/backFaces.png"), 96, 96, 721));
+    int counter = 20;
+
     @Override
     public void tick(){
         counter--;
@@ -138,14 +152,18 @@ public class PlayerEntity extends GameObject {
             if(isMoving){
                 if(targetPokemon == null){
                     if(random.nextInt(50) == 1){
-                        targetPokemon = new PokemonEntity(Pokemons.pokemons.get(random.nextInt(3)));
+                        // Pokemon Spawning
+                        targetPokemon = new PokemonEntity(Pokemons.pokemons.get(random.nextInt(Pokemons.pokemons.size() - 1)));
+                        targetPokemon.setSprite(pokemonSpritesheet.sprites.get(targetPokemon.id - 1));
+
                         Vector2f direction = new Vector2f(this.facing == EntityFacing.LEFT ? -1 :
                                 this.facing == EntityFacing.RIGHT ? 1 : 0,  this.facing == EntityFacing.UP ? 1 :
                                 this.facing == EntityFacing.DOWN ? -1 : 0);
                         Vector2f position = new Vector2f(this.transform.position);
                         position.add(direction.normalize().mul(80));
                         targetPokemon.setTransform(new Transform(position.x, position.y,
-                                32, 32));
+                                64, 64));
+
                         this.world.pokemons.add(targetPokemon);
                         Window.getCurrentScene().addGameObjectToScene(targetPokemon);
 
@@ -168,9 +186,13 @@ public class PlayerEntity extends GameObject {
 
                 }else{
                     if(!Window.getCurrentScene().containsGameObject(battleButton)){
-                        battleButton = new ButtonObject(200, 50, "\t\tBattle Pokemon!\t\t", (button) -> {
-                            Window.setScene(new BattleScene(targetPokemon, this));
+                        battleButton = new ButtonObject(200, 50, "\t\tBattle " + targetPokemon.name + "!\t\t", (button) -> {
+                            Window.getCurrentScene().removeGameObjectFromScene(targetPokemon);
                             Window.getCurrentScene().removeGameObjectFromScene(battleButton);
+
+                            Window.setScene("battle", new BattleScene(targetPokemon, this));
+
+
                         });
                         Window.getCurrentScene().addGameObjectToScene(battleButton);
                     }
@@ -192,6 +214,13 @@ public class PlayerEntity extends GameObject {
         this.sprite = currentSpriteSheet.sprites.get(0);
         this.animationState.clear();
         this.animationState.addFrames(currentSpriteSheet.sprites, (1/ speed) * 20);
+    }
+
+    public void addPokemonToTeam(PokemonEntity pokemon){
+    }
+
+    public void addPokemonToInventory(PokemonEntity pokemon){
+
     }
 
     @Event.EventHandler

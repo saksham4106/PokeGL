@@ -13,12 +13,19 @@ public class Spritesheet {
         this.sprites = new ArrayList<>();
         this.texture = texture;
 
+        float x = 0;
+        float y = 0;
+
         for (int spriteID = 0; spriteID < numSprites; spriteID++) {
             Sprite sprite = new Sprite(spriteWidth, spriteHeight, texture);
-            float bottom_left_tx = spriteID * spriteWidth / (float) texture.getWidth();
-            sprite.setTexCoords(new Vector2f(bottom_left_tx, 0));
+            sprite.setTexCoords(new Vector2f(x, y));
             sprites.add(sprite);
 
+            x += spriteWidth / (float) texture.getWidth();
+            if(x >= 1){
+                x = 0;
+                y += (spriteHeight / (float) texture.getHeight());
+            }
         }
 
     }

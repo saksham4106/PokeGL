@@ -56,6 +56,7 @@ public class Assets {
     }
 
     public static Spritesheet getSpritesheet(String name, Spritesheet spritesheet) {
+        if(name.isEmpty()) name = spritesheet.texture.filepath;
         if (getSpritesheet(name) != null) {
             return getSpritesheet(name);
         }

@@ -3,14 +3,14 @@ package ui;
 import audio.Sound;
 import callback.MouseEventListener;
 import fonts.Fonts;
-import fonts.Text;
 import game.GameObject;
 import game.Transform;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
+import renderer.Renderer;
 import renderer.Sprite;
 import utils.Assets;
-import utils.CollisionDetection;
+import collision.CollisionDetection;
 import utils.ColorUtils;
 import utils.MathUtil;
 
@@ -159,8 +159,8 @@ public class ButtonObject extends GameObject {
     }
 
     @Override
-    public void update(float dt) {
-        super.update(dt);
+    public void update(float dt, Renderer renderer) {
+        super.update(dt, renderer);
 
         Transform transform = new Transform(MouseEventListener.getScreenCoord(), new Vector2f(0, 0));
         Vector2f position = this.transform.position;
@@ -172,7 +172,7 @@ public class ButtonObject extends GameObject {
         }else{
             if(this.darkerColor.equals(this.sprite.color)){
                 this.sprite.color.set(ColorUtils.shadeColorWithoutAlpha(this.sprite.color, 1/shade));
-                this.textObject.setColor(ColorUtils.shadeColorWithoutAlpha(this.textObject.color, 1/shade));
+//                this.textObject.setColor(ColorUtils.shadeColorWithoutAlpha(this.textObject.color, 1/shade));
                 this.markDirty(true);
             }
         }
@@ -188,7 +188,7 @@ public class ButtonObject extends GameObject {
     public void onHover(){
         if(this.darkerColor.x != this.sprite.color.x){
             this.sprite.color.set(this.darkerColor);
-            this.textObject.setColor(ColorUtils.shadeColorWithoutAlpha(this.textObject.color, shade));
+//            this.textObject.setColor(ColorUtils.shadeColorWithoutAlpha(this.textObject.color, shade));
             this.markDirty(true);
         }
 

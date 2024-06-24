@@ -1,5 +1,6 @@
 package fonts;
 
+import org.joml.Vector2f;
 import renderer.Texture;
 import utils.Assets;
 
@@ -63,7 +64,18 @@ public class FontLoader {
     public String getValue(String var, String text){
         return Arrays.stream(text.split(" ")).filter(token -> token.contains(var)).findFirst()
                 .get().split("=")[1].replaceAll("\"", "");
+    }
 
+    public Vector2f getStringDimensions(String text, float scale){
+        float width = 0;
+        float height = 0;
+        for (int i = 0; i < text.length(); i++) {
+            char c = text.charAt(i);
+            Character ch = characters.getOrDefault((int)c, new Character(0 , 0 , 0 , 0 , 0 , 0 , 0 , 0));
+            width += ch.xAdvance;
+            height = Math.max(height, (ch.height + ch.yOffset));
+        }
+        return new Vector2f(width * scale, height * scale);
     }
 }
 

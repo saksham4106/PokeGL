@@ -47,12 +47,9 @@ public class RenderBatch implements Comparable<RenderBatch> {
     protected Shader shader;
     public int zIndex;
 
-    public boolean isUIBatch;
-
-    public RenderBatch(int maxBatchSize, int zIndex, Shader shader, boolean isUIBatch) {
+    public RenderBatch(int maxBatchSize, int zIndex, Shader shader) {
         this.shader = shader;
         shader.compile();
-        this.isUIBatch = isUIBatch;
 
         //this.gameObjects = new GameObject[maxBatchSize];
         this.gameObjects = new HashSet<>();
@@ -68,7 +65,7 @@ public class RenderBatch implements Comparable<RenderBatch> {
     }
 
     public RenderBatch(int maxBatchSize, int zIndex) {
-        this(maxBatchSize, zIndex, Assets.getShader("assets/shaders/vertexBatchShader.glsl"), false);
+        this(maxBatchSize, zIndex, Assets.getShader("assets/shaders/vertexBatchShader.glsl"));
     }
 
     public void start() {
@@ -79,7 +76,7 @@ public class RenderBatch implements Comparable<RenderBatch> {
         // Allocate space for vertices
         vboID = glGenBuffers();
         glBindBuffer(GL_ARRAY_BUFFER, vboID);
-        glBufferData(GL_ARRAY_BUFFER, vertices.length * Float.BYTES, GL_DYNAMIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, (long) vertices.length * Float.BYTES, GL_DYNAMIC_DRAW);
 
         // Create and upload indices buffer
         int eboID = glGenBuffers();
@@ -122,7 +119,7 @@ public class RenderBatch implements Comparable<RenderBatch> {
         // Add properties to local vertices array
         loadVertexProperties(gameObject);
 
-        if (gameObjects.size() >= this.maxBatchSize) {
+        if (gameObjects.size() == this.maxBatchSize - 1) {
             this.hasRoom = false;
         }
 
@@ -231,7 +228,8 @@ public class RenderBatch implements Comparable<RenderBatch> {
             // Load texture id
             vertices[offset + 8] = texId;
 
-            vertices[offset + 9] = this.isUIBatch ? 1 : 0;
+            vertices[offset + 9] = gameObject.isUIElement() ? 1 : 0;
+                
 
             offset += VERTEX_SIZE;
         }

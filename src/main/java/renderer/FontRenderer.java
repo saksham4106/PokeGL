@@ -7,6 +7,7 @@ import game.Window;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 import utils.Assets;
+import utils.MathUtil;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.GL_FLOAT;
@@ -18,7 +19,7 @@ import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
 public class FontRenderer {
-    FontBatch fontBatch = new FontBatch(1000, 100);
+    FontBatch fontBatch = new FontBatch(10000, 100);
     public FontRenderer(){
         this.fontBatch.start();
     }
@@ -156,6 +157,7 @@ public class FontRenderer {
 
     public void drawString(String string, float x, float y, float scale, FontLoader fontLoader, Vector4f color,
                            boolean isSDFEnabled){
+//        Vector2f pos = MathUtil.normalizePosition(new Vector2f(x, y));
         float currentX = x;
         float currentY = y;
 
@@ -188,6 +190,7 @@ public class FontRenderer {
             fontBatch.addCharacter(currentX, currentY - yOffset, scale, character.width, character.height, color,
                     character.getTexCoords(fontLoader.imageWidth, fontLoader.imageHeight));
             currentX += character.xAdvance * scale;
+
         }
     }
 

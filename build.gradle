@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+	id 'application'
 }
 
 group 'com.saksham4106'
@@ -48,6 +49,10 @@ jar {
     }
 }
 
+application {
+	mainClass = 'Main'
+}
+
 task fatJar(type: Jar) {
     manifest.from jar.manifest
     classifier = 'all'
@@ -61,3 +66,4 @@ task fatJar(type: Jar) {
 }
 sourceCompatibility = JavaVersion.VERSION_16
 targetCompatibility = JavaVersion.VERSION_16
+
