@@ -8,7 +8,6 @@ import game.GameObject;
 import game.Transform;
 import org.joml.Vector4f;
 import renderer.Sprite;
-import renderer.Texture;
 import utils.Assets;
 import utils.ColorUtils;
 

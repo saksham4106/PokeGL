@@ -16,6 +16,8 @@ project.ext.lwjglNatives = "natives-linux"
 
 dependencies {
     implementation platform("org.lwjgl:lwjgl-bom:$lwjglVersion")
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.0.1'
+
 
     implementation("ch.qos.logback:logback-classic:1.2.11")
     implementation group: 'org.json', name: 'json', version: '20220320'

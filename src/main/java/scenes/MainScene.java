@@ -4,9 +4,10 @@ import callback.KeyEventListener;
 import entity.PlayerEntity;
 import events.EventBus;
 import fonts.Fonts;
-import game.Camera;
 import game.Window;
 import org.joml.Vector2f;
+import pokemon.Pokemons;
+import serialization.LoadGame;
 import tiles.TiledMapParser;
 import utils.Assets;
 import utils.ColorUtils;
@@ -19,16 +20,30 @@ public class MainScene extends Scene {
 
     public MainScene() {
         super();
-        this.camera = new Camera(new Vector2f(310, 140));
         this.sceneName = "main";
     }
 
     @Override
     public void init() {
         TiledMapParser map = new TiledMapParser("assets/map/Pellet Town.tmx");
-        world = new World(50, 300, 48, 48, map);
-        player = new PlayerEntity(32, 48, new Vector2f(1301, -675), 1,
+        Pokemons.init();
+        world = new World(0, 0, 48, 48, map);
+
+
+        // load player
+        player = new PlayerEntity("Saksham4106", 32, 48, new Vector2f(1250, -900), 1,
                 Assets.getTexture("assets/textures/playerDown.png"), world);
+        PlayerEntity p = LoadGame.loadPlayer(player);
+        if(p != null){
+            player = p;
+        }
+        player.init();
+
+
+
+        if(player.pokemons.isEmpty()){
+            Window.setScene("starterPokemon", new StarterPokemonScene(player));
+        }
 
         EventBus.addListener(player);
         addGameObjectToScene(player);
@@ -55,7 +70,6 @@ public class MainScene extends Scene {
         }
 
         player.update(dt, renderer);
-        renderer.render();
     }
 
     private void quitGame(){

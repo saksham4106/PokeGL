@@ -1,43 +1,78 @@
 package entity;
 
-import entity.pokemon.PokemonType;
-import events.EventBus;
-import events.PokemonDespawnEvent;
+import pokemon.*;
 import game.GameObject;
-import game.Window;
+import pokemon.properties.PokemonMove;
+import pokemon.properties.PokemonType;
+import renderer.Sprite;
+import utils.Utils;
+
+import java.util.List;
 
 public class PokemonEntity extends GameObject {
 
-    public String name;
     public int id;
-    public boolean isPersistent = false;
-    public PokemonType type;
+    public String name;
+    public int max_hp;
+    public int hp;
+    public int attack;
+    public int defence;
+    public int speed;
+    public int xp;
+    public int level;
+    public List<PokemonType> types;
+    public List<PokemonMove> moves;
 
-    public PokemonEntity(String name, PokemonType type, int id) {
-        this.name = name;
-        this.type = type;
-        //this.sprite = new Sprite(64, 64, new Texture("assets/pokemonImages/" + id + "_frontFace.png"));
-        this.id = id;
-    }
+//    private EntityFacing facing;
+    private Sprite[] sprites;
 
-    public PokemonEntity(PokemonEntity pokemon){
+    public PokemonEntity(Pokemon pokemon){
         this.name = pokemon.name;
-        this.type = pokemon.type;
-        this.sprite = pokemon.sprite;
+        this.types = pokemon.types;
+        this.moves = pokemon.generateMoves();
         this.id = pokemon.id;
-        this.isPersistent = pokemon.isPersistent;
+        this.sprites = Pokemons.getPokemonSprite(pokemon);
+        this.hp = pokemon.hp;
+        this.max_hp = pokemon.hp;
+        this.defence = pokemon.defence;
+//        this.level = (int) Math.round(Math.sqrt(pokemon.base_exp)) + Utils.getRandomElement(List.of(-1, 0, 0, 0, 1));
+        this.level = pokemon.base_exp / (6 + Utils.getRandomElement(List.of(-1, 0, 0, 0, 1)));
+        this.xp = (int) (this.level * this.level * this.level * 1.25f);
+
+        switchFacing(EntityFacing.DOWN);
+        reEvaluateStats(pokemon);
     }
 
-    int counter = 5 * 20;
+    public void reEvaluateStats(Pokemon pokemon){
 
+    }
+
+
+    public void switchFacing(EntityFacing facing){
+
+        if(facing == EntityFacing.UP){
+            this.sprite = sprites[1];
+        }else{
+            this.sprite = sprites[0];
+        }
+    }
+
+    private int counter = 5 * 20;
     @Override
     public void tick() {
-        counter--;
-        if(counter <= 0){
-            if(!isPersistent){
-                Window.getCurrentScene().removeGameObjectFromScene(this);
-                EventBus.invoke(new PokemonDespawnEvent());
-            }
-        }
+        // If despawning should be in PokemonEntity;
+
+//        counter--;
+//        if(counter <= 0){
+//            if(!isPersistent){
+//                Window.getCurrentScene().removeGameObjectFromScene(this);
+//                EventBus.invoke(new PokemonDespawnEvent());
+//            }
+//        }
+    }
+
+    @Override
+    public String toString() {
+        return name + "," + id;
     }
 }

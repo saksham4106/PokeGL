@@ -19,9 +19,13 @@ import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
 public class FontRenderer {
-    FontBatch fontBatch = new FontBatch(10000, 100);
+    public FontBatch fontBatch;
     public FontRenderer(){
+        init();
         this.fontBatch.start();
+    }
+    public void init(){
+        fontBatch = new FontBatch(10000, 100);
     }
     static class FontBatch{
 
@@ -149,6 +153,8 @@ public class FontRenderer {
                 texture.unbind();
                 shader.detach();
 
+                //Clear vertices each update cycle
+                this.vertices = new float[MAX_BATCH_SIZE * 8];
                 size = 0;
             }
 
@@ -196,6 +202,7 @@ public class FontRenderer {
 
     public void render(){
         fontBatch.render();
+
     }
 
 }

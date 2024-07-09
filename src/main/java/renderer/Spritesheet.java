@@ -18,7 +18,7 @@ public class Spritesheet {
 
         for (int spriteID = 0; spriteID < numSprites; spriteID++) {
             Sprite sprite = new Sprite(spriteWidth, spriteHeight, texture);
-            sprite.setTexCoords(new Vector2f(x, y));
+            sprite.generateTexCoord(new Vector2f(x, y));
             sprites.add(sprite);
 
             x += spriteWidth / (float) texture.getWidth();

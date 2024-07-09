@@ -7,6 +7,7 @@ import java.awt.*;
 public class ColorUtils {
 
     public static Vector4f WHITE = getColor(Color.WHITE);
+    public static Vector4f BLACK = getColor(Color.BLACK);
     public static Vector4f getColor(int r, int g, int b, int a){
         return new Vector4f(r, g, b, a).div(255f);
     }

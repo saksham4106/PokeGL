@@ -37,6 +37,13 @@ public class GameObject {
         this(transform, sprite, zIndex, false);
     }
 
+    public GameObject(float x, float y, float width, float height, Sprite sprite){
+        this(new Transform(x,y,width,height), sprite);
+    }
+
+    public GameObject(GameObject go){
+        this(go.transform, go.sprite, go.zIndex);
+    }
     public GameObject(){
         this.markDirty(true);
         this.zIndex = 0;
@@ -64,6 +71,7 @@ public class GameObject {
 
     public void setTransform(Transform transform) {
         this.transform = this.isUIElement() ? MathUtil.normalizeTransform(transform) : transform;
+        this.markDirty(true);
     }
 
     public Sprite getSprite() {

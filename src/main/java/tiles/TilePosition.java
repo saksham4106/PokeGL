@@ -11,8 +11,7 @@ public class TilePosition {
 
     @Override
     public String toString() {
-        return "{" +
-                "" + x +
+        return "{" + x +
                 ", " + y +
                 ", " + z + '}';
     }

@@ -127,7 +127,6 @@ public class ButtonObject extends GameObject {
 
     public ButtonObject(float startX, float startY, String label, IClickable onClick){
         this(startX, startY, label, onClick, new Sprite(0, 0, new Vector4f(0.5f, 0.5f, 0.5f, 0.7f)));
-
     }
 
     public ButtonObject(float startX, float startY, String label, IClickable onClick, Sprite sprite){
@@ -179,7 +178,7 @@ public class ButtonObject extends GameObject {
     }
 
     public void onClick(){
-        this.onClick.onClick(this);
+        this.onClick.onClick();
         Sound sound = Assets.getSound("assets/sounds/buttonpress.ogg", new Sound("assets/sounds/buttonpress.ogg", false));
         sound.play();
 
@@ -198,7 +197,7 @@ public class ButtonObject extends GameObject {
     }
 
     public interface IClickable{
-        void onClick(ButtonObject button);
+        void onClick();
     }
 
 

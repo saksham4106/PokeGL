@@ -23,6 +23,10 @@ public class Sprite {
         this.color = sprite.color;
         this.texCoords = sprite.texCoords;
     }
+    
+    public Sprite(){
+
+    }
 
 
     public Sprite(float width, float height, Texture texture, Vector4f color){
@@ -48,7 +52,7 @@ public class Sprite {
     /*
      * @param texCoord The texture coordinates of the bottom left corner
      */
-    public void setTexCoords(Vector2f texCoord) {
+    public void generateTexCoord(Vector2f texCoord) {
         this.texCoords = new Vector2f[]{
                 new Vector2f(texCoord.x, texCoord.y + height / (float)this.texture.getHeight()),
                 new Vector2f(texCoord.x + width / (float)this.texture.getWidth(), texCoord.y + height / (float)this.texture.getHeight()),
@@ -61,5 +65,14 @@ public class Sprite {
     public Vector2f[] getTexCoords() {
         return texCoords;
     }
+
+    public static Sprite resize(float scale, Sprite sprite){
+        Sprite output = new Sprite(sprite);
+        output.width *= scale;
+        output.height *= scale;
+        return output;
+    }
+
+
 }
 

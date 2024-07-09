@@ -14,7 +14,7 @@ import java.util.List;
 public class Renderer {
     private final int batchSize = 10000;
     private final List<RenderBatch> batches;
-    private FontRenderer fontRenderer;
+    public FontRenderer fontRenderer;
 
     private final Shader defaultShader = Assets.getShader("assets/shaders/vertexBatchShader.glsl");
 

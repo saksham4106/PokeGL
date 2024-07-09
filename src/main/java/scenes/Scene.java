@@ -17,21 +17,17 @@ import java.util.*;
 public abstract class Scene {
 
     public Set<GameObject> sceneGameObjects;
-    private Set<GameObject> removeableGameObjects;
     public static PlayerEntity player;
 
-    protected Renderer renderer;
+    public Renderer renderer;
     public Camera camera = new Camera(new Vector2f(0, 0));
 
     public boolean throwaway = false;
     public String sceneName;
 
-
     public Scene(){
-
         this.renderer = new Renderer();
         this.sceneGameObjects = new HashSet<>();
-        this.removeableGameObjects = new HashSet<>();
     }
 
     public void addGameObjectToScene(GameObject gameObject){
@@ -51,9 +47,10 @@ public abstract class Scene {
     }
 
     public void removeGameObjectFromScene(GameObject gameObject){
-        removeableGameObjects.add(gameObject);
+//        gameObject.removeNextCycle = true;
+        this.sceneGameObjects.remove(gameObject);
+        this.renderer.removeGameObject(gameObject);
     }
-
 
     public boolean containsGameObject(GameObject gameObject){
         return this.sceneGameObjects.contains(gameObject);
@@ -62,22 +59,27 @@ public abstract class Scene {
     public void init(){
     }
 
-    public void update(float dt){
-        Iterator<GameObject> gameObjectIterator = sceneGameObjects.iterator();
-        while(gameObjectIterator.hasNext()){
-            GameObject gameObject = gameObjectIterator.next();
-            gameObject.update(dt, this.renderer);
-            if(removeableGameObjects.contains(gameObject)){
-                gameObjectIterator.remove();
-                removeableGameObjects.remove(gameObject);
-                this.renderer.removeGameObject(gameObject);
-            }
-        }
 
-//        GameObject[] gameObjects = sceneGameObjects.toArray(new GameObject[0]);
-//        for (int i = 0; i < gameObjects.length; i++) {
-//            gameObjects[i].update(dt);
+    @SuppressWarnings("ForLoopReplaceableByForEach")
+    public void update(float dt){
+
+        // If the array method throws concurrent exception, use iterator. flag gameobject for removal
+//        gameObjectIterator = sceneGameObjects.iterator();
+//        int size = sceneGameObjects.size();
+//        for(int i = 0; i < size; i++){
+//            GameObject gameObject = gameObjectIterator.next();
+//            gameObject.update(dt, this.renderer);
+//            if(gameObject.removeNextCycle){
+//                gameObjectIterator.remove();
+//                renderer.removeGameObject(gameObject);
+//            }
 //        }
+
+        GameObject[] gameObjects = sceneGameObjects.toArray(new GameObject[0]);
+        for (int i = 0; i < gameObjects.length; i++) {
+            gameObjects[i].update(dt, renderer);
+        }
+        this.renderer.render();
     }
 
     public void destroy(){
@@ -104,6 +106,10 @@ public abstract class Scene {
     public void setBackground(Vector4f color){
         this.renderer.add(new GameObject(new Transform(0, 0, Window.width, Window.height),
                 new Sprite(Window.width, Window.height, color), 0, true));
+    }
+
+    public void save(){
+
     }
 
 

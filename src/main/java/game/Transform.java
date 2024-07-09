@@ -26,6 +26,7 @@ public class Transform {
         this.scale = new Vector2f(width, height);
     }
 
+
     public Transform(Vector2f coords, float width, float height){
         this(coords, new Vector2f(width, height));
     }

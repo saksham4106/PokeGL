@@ -3,18 +3,21 @@ package game;
 import audio.AudioContext;
 import callback.KeyEventListener;
 import callback.MouseEventListener;
-import org.lwjgl.Version;
+import events.EventBus;
+import events.WindowCloseEvent;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import scenes.MainScene;
 import scenes.Scene;
 import scenes.StartingMenuScene;
+import serialization.SaveGame;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
@@ -86,20 +89,19 @@ public class Window {
         audioContext.initialise();
         GL.createCapabilities();
 
-        populateScenes();
+        try {
+            Files.createDirectories(Paths.get("data"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
         setScene("starting_menu", new StartingMenuScene());
 
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     }
 
-    private void populateScenes(){
-        scenes.put("starting_menu", null);
-        scenes.put("main", null);
-        scenes.put("battle", null);
-    }
-
-    private static void setScene(Scene scene, boolean initialise) {
+    public static void setScene(Scene scene, boolean initialise) {
         if (currentScene != null){
             if(currentScene.throwaway){
                 currentScene.destroy();
@@ -167,6 +169,8 @@ public class Window {
             dt = endTime - beginTime;
             beginTime = endTime;
         }
+        EventBus.invoke(new WindowCloseEvent());
+//        currentScene.save();
         currentScene.destroy();
     }
 }
