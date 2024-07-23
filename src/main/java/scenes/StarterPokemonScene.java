@@ -7,6 +7,7 @@ import game.Window;
 import pokemon.Pokemons;
 import renderer.Sprite;
 import ui.ButtonObject;
+import ui.InputObject;
 import utils.ColorUtils;
 
 public class StarterPokemonScene extends Scene {
@@ -54,9 +55,7 @@ public class StarterPokemonScene extends Scene {
         super.update(dt);
 //        renderer.drawString("Welcome to PokeGL!", -275, 100, 0.5f,
 //                Fonts.ATARI_CLASSIC_FONT, ColorUtils.WHITE, false);
-        renderer.drawString("select a starter pokemon to start the game!", -350, 100, 0.25f,
-                Fonts.ATARI_CLASSIC_FONT, ColorUtils.WHITE, false);
-
+        renderer.drawString("Hello! Professor Oak here. To start your pokemon journey, select a starter pokemon", Window.width / 50f, Window.height/1.1f, 0.3f, Fonts.OPEN_SANS_FONT, ColorUtils.WHITE, false);
     }
 
 

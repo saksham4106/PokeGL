@@ -1,5 +1,6 @@
 package pokemon;
 
+import entity.PokemonEntity;
 import pokemon.pokemons.*;
 import renderer.Sprite;
 import renderer.Spritesheet;
@@ -32,6 +33,7 @@ public class Pokemons{
     public static Pokemon get(int id){
         return pokemons.get(id - 1);
     }
+    public static Pokemon get(PokemonEntity pokemon){return Pokemons.get(pokemon.id);}
 
     public static Sprite[] getPokemonSprite(Pokemon pokemon){
         return new Sprite[]{frontSpritesheet.sprites.get(pokemon.id - 1), backSpritesheet.sprites.get(pokemon.id - 1)};

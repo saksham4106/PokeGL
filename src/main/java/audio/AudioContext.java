@@ -1,5 +1,6 @@
 package audio;
 
+import game.Window;
 import org.lwjgl.openal.AL;
 import org.lwjgl.openal.ALC;
 import org.lwjgl.openal.ALCCapabilities;
@@ -23,7 +24,7 @@ public class AudioContext {
         ALCapabilities alCapabilities = AL.createCapabilities(alcCapabilities);
 
         if(!alCapabilities.OpenAL10){
-            System.out.println("Audio Library not supported");
+            Window.LOGGER.error("Audio Library not supported");
         }
     }
 

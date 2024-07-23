@@ -3,6 +3,7 @@ package renderer;
 
 import fonts.Character;
 import fonts.FontLoader;
+import game.Transform;
 import game.Window;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
@@ -20,13 +21,14 @@ import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
 public class FontRenderer {
     public FontBatch fontBatch;
+
     public FontRenderer(){
-        init();
+        fontBatch = new FontBatch(10000, 100);
         this.fontBatch.start();
     }
-    public void init(){
-        fontBatch = new FontBatch(10000, 100);
-    }
+
+
+
     static class FontBatch{
 
         public Texture texture;
@@ -181,7 +183,7 @@ public class FontRenderer {
             char c = string.charAt(charID);
             Character character = fontLoader.getCharacter(c);
             if(c == '\n'){
-                y -= fontLoader.lineHeight * scale;
+                currentY -= fontLoader.lineHeight * scale;
                 currentX = x;
                 continue;
             }else if(c == '\t'){
@@ -189,12 +191,17 @@ public class FontRenderer {
                 continue;
             }
 
-            float yOffset = downCharacters.contains(String.valueOf(c)) ? 20 * scale : 0;
+            float yOffset = downCharacters.contains(String.valueOf(c)) ? 15 * scale : 0;
             yOffset = upCharacters.contains(String.valueOf(c)) ? -40 * scale : yOffset;
             yOffset = midCharacters.contains(String.valueOf(c)) ? -20 * scale : yOffset;
 
-            fontBatch.addCharacter(currentX, currentY - yOffset, scale, character.width, character.height, color,
+
+            Transform transform = new Transform(currentX, currentY - yOffset, character.width, character.height);
+            transform = MathUtil.normalizeTransform(transform);
+            fontBatch.addCharacter(transform.position.x, transform.position.y, scale, transform.scale.x, transform.scale.y, color,
                     character.getTexCoords(fontLoader.imageWidth, fontLoader.imageHeight));
+//            fontBatch.addCharacter(currentX, currentY - yOffset, scale, character.width, character.height, color,
+//                    character.getTexCoords(fontLoader.imageWidth, fontLoader.imageHeight));
             currentX += character.xAdvance * scale;
 
         }

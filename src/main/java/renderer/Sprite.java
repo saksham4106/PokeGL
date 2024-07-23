@@ -23,17 +23,19 @@ public class Sprite {
         this.color = sprite.color;
         this.texCoords = sprite.texCoords;
     }
-    
-    public Sprite(){
-
-    }
-
 
     public Sprite(float width, float height, Texture texture, Vector4f color){
         this.width = width;
         this.height = height;
         this.texture = texture;
         this.color = color;
+    }
+
+    public Sprite(Texture texture){
+        this(0, 0, texture);
+    }
+    public Sprite(Vector4f color){
+        this(0,0, color);
     }
 
     public Sprite(float width, float height, Vector4f color){

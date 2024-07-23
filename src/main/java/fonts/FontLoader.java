@@ -77,5 +77,9 @@ public class FontLoader {
         }
         return new Vector2f(width * scale, height * scale);
     }
+
+    public float getMaxHeight(float scale){
+        return getStringDimensions("\"abcdefghijklmnopqrstuvwxyz_~", scale).y;
+    }
 }
 

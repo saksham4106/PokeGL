@@ -1,8 +1,10 @@
 package game;
 
 import org.joml.Vector2f;
+import org.joml.Vector4f;
 import renderer.Renderer;
 import renderer.Sprite;
+import renderer.Texture;
 import utils.MathUtil;
 
 import java.util.Objects;
@@ -13,14 +15,15 @@ public class GameObject {
     private boolean isDirty;
     private boolean isUIElement = false;
     public int zIndex;
-
     public boolean isCollidable = false;
 
     public GameObject(Transform transform, Sprite sprite, int zIndex, boolean isUIElement){
         this.sprite = sprite;
         this.zIndex = zIndex;
         this.isUIElement = isUIElement;
-        this.transform = transform;
+        this.sprite.width = transform.scale.x;
+        this.sprite.height = transform.scale.y;
+
         this.setTransform(transform);
         this.markDirty(true);
     }
@@ -41,16 +44,21 @@ public class GameObject {
         this(new Transform(x,y,width,height), sprite);
     }
 
+    public GameObject(float x, float y, float width, float height, Sprite sprite, boolean isUIElement){
+        this(new Transform(x,y,width,height), sprite, isUIElement);
+        this.sprite.width = width;
+        this.sprite.height = height;
+        this.markDirty(true);
+    }
+
     public GameObject(GameObject go){
         this(go.transform, go.sprite, go.zIndex);
     }
+
     public GameObject(){
         this.markDirty(true);
         this.zIndex = 0;
     }
-
-
-
 
     public void init(){
         this.markDirty(true);
@@ -80,6 +88,7 @@ public class GameObject {
 
     public void setSprite(Sprite sprite) {
         this.sprite = sprite;
+        this.markDirty(true);
     }
 
     public void markDirty(boolean isDirty){
@@ -112,7 +121,7 @@ public class GameObject {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         GameObject that = (GameObject) o;
-        return isUIElement == that.isUIElement && zIndex == that.zIndex && isCollidable == that.isCollidable && Objects.equals(transform, that.transform) && Objects.equals(sprite, that.sprite);
+        return isUIElement == that.isUIElement && zIndex == that.zIndex && isCollidable == that.isCollidable && transform.equals(that.transform) && Objects.equals(sprite, that.sprite);
     }
 
     @Override
@@ -122,6 +131,16 @@ public class GameObject {
 
     public void setPosition(float x, float y){
         this.transform.position = new Vector2f(x, y);
+        this.markDirty(true);
+    }
+
+    public void setTexture(Texture texture){
+        this.sprite.texture = texture;
+        this.markDirty(true);
+    }
+
+    public void setColor(Vector4f color){
+        this.sprite.color.set(color);
         this.markDirty(true);
     }
 }

@@ -21,4 +21,8 @@ public class ColorUtils {
         shadedColor.w = color.w();
         return shadedColor;
     }
+
+    public static Vector4f getColor(float h, float s, float v){
+        return getColor(Color.getHSBColor(h / 360f,s,v));
+    }
 }

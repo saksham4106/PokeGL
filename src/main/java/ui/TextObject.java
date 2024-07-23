@@ -81,7 +81,7 @@ public class TextObject {
             sprite = new Sprite(character.width, character.height, sprite.texture);
             sprite.setTexCoords(character.getTexCoords(fontLoader.imageWidth, fontLoader.imageHeight));
             sprite.color = color;
-            float yOffset = downCharacters.contains(String.valueOf(c)) ? 20 * scale : 0;
+            float yOffset = downCharacters.contains(String.valueOf(c)) ? 15 * scale : 0;
             yOffset = upCharacters.contains(String.valueOf(c)) ? -40 * scale : yOffset;
             yOffset = midCharacters.contains(String.valueOf(c)) ? -20 * scale : yOffset;
 

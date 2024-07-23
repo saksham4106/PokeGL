@@ -6,10 +6,13 @@ import game.GameObject;
 import game.Transform;
 import game.Window;
 import org.joml.Vector2f;
+import org.joml.Vector4f;
 import pokemon.Pokemons;
 import renderer.Sprite;
 import ui.ButtonObject;
+import ui.InputObject;
 import utils.Assets;
+import utils.ColorUtils;
 
 
 public class StartingMenuScene extends Scene {
@@ -34,12 +37,11 @@ public class StartingMenuScene extends Scene {
         addGameObjectToScene(enter_game);
 
         this.setBackground(Assets.getTexture("assets/textures/Scene1.png"));
+
     }
 
     @Override
     public void update(float dt) {
         super.update(dt);
-//        this.renderer.drawString("Pokemon Game!", -100, 100, 0.7f, Fonts.LEAGUE_SPARTA_FONT,
-//                new Vector4f(1, 0, 1, 1), false);
     }
 }

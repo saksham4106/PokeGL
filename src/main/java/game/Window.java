@@ -11,13 +11,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import scenes.Scene;
 import scenes.StartingMenuScene;
-import serialization.SaveGame;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Stack;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
@@ -31,6 +31,8 @@ public class Window {
     public static Logger LOGGER = LoggerFactory.getLogger(Window.class);
     private static Scene currentScene;
     private static Map<String, Scene> scenes = new HashMap<>();
+    private static Stack<Scene> uiStack = new Stack<>();
+
     public static AudioContext audioContext = new AudioContext();
 
     private boolean isResized = true;
@@ -54,7 +56,7 @@ public class Window {
         glfwSetErrorCallback(null).free();
     }
 
-    public void init() {
+    private void init() {
         GLFWErrorCallback.createPrint(System.err).set();
 
         if (!glfwInit()) LOGGER.error("Failed to initialize GLFW");
@@ -80,6 +82,8 @@ public class Window {
         glfwSetMouseButtonCallback(window, MouseEventListener::mouseButtonCallback);
         glfwSetScrollCallback(window, MouseEventListener::mouseScrollCallback);
         glfwSetCursorPosCallback(window, MouseEventListener::mousePosCallback);
+        glfwSetCharCallback(window, KeyEventListener::charCallback);
+
         glfwSetFramebufferSizeCallback(window, (window, width, height) -> {
             Window.width = width;
             Window.height = height;
@@ -101,7 +105,7 @@ public class Window {
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     }
 
-    public static void setScene(Scene scene, boolean initialise) {
+    private static void setScene(Scene scene, boolean initialise) {
         if (currentScene != null){
             if(currentScene.throwaway){
                 currentScene.destroy();
@@ -134,7 +138,26 @@ public class Window {
         return currentScene;
     }
 
-    public void loop() {
+    public static void pushScene(Scene scene){
+        uiStack.push(scene);
+    }
+
+    public static Scene popScene(){
+        if(!uiStack.isEmpty()){
+            return uiStack.pop();
+        }
+        return null;
+    }
+
+    public static Scene getCurrentUIScene(){
+        if(!uiStack.isEmpty()){
+            return uiStack.peek();
+        }
+        return null;
+    }
+
+
+    private void loop() {
 
         float beginTime = (float) glfwGetTime();
 
@@ -160,6 +183,10 @@ public class Window {
                     isResized = false;
                 }
                 currentScene.update(dt);
+
+                if(!uiStack.isEmpty()){
+                    uiStack.peek().update(dt);
+                }
             }
 
             glfwSwapBuffers(window);

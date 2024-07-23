@@ -57,9 +57,21 @@ public class Renderer {
             if(gameObject instanceof ButtonObject buttonObject){
                 this.removeText(buttonObject.textObject);
             }
-            if(batch.removeGameObject(gameObject)) break;
+            if(batch.removeGameObject(gameObject)){
+                break;
+            }
         }
     }
+
+    public boolean contains(GameObject gameObject){
+        for(RenderBatch batch : batches){
+            if(batch.containsGameObject(gameObject)){
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     /**
      * Renders string in Retained Mode. TextObject persists till isn't manually removed
@@ -67,6 +79,12 @@ public class Renderer {
      */
     public void addText(TextObject textObject){
         textObject.charObjects.forEach(this::add);
+    }
+
+    public void addText(TextObject... textObjects){
+        for (TextObject textObject : textObjects) {
+            addText(textObject);
+        }
     }
 
     public void removeText(TextObject textObject){
@@ -83,7 +101,7 @@ public class Renderer {
 
     public void addButton(ButtonObject buttonObject){
         this.add(buttonObject);
-        this.addText(buttonObject.textObject);
+        if(buttonObject.textObject != null) this.addText(buttonObject.textObject);
     }
 
     public void render() {

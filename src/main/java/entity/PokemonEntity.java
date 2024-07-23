@@ -24,7 +24,7 @@ public class PokemonEntity extends GameObject {
     public List<PokemonMove> moves;
 
 //    private EntityFacing facing;
-    private Sprite[] sprites;
+    private final Sprite[] sprites;
 
     public PokemonEntity(Pokemon pokemon){
         this.name = pokemon.name;
@@ -35,6 +35,8 @@ public class PokemonEntity extends GameObject {
         this.hp = pokemon.hp;
         this.max_hp = pokemon.hp;
         this.defence = pokemon.defence;
+        this.attack = pokemon.attack;
+        this.speed = pokemon.speed;
 //        this.level = (int) Math.round(Math.sqrt(pokemon.base_exp)) + Utils.getRandomElement(List.of(-1, 0, 0, 0, 1));
         this.level = pokemon.base_exp / (6 + Utils.getRandomElement(List.of(-1, 0, 0, 0, 1)));
         this.xp = (int) (this.level * this.level * this.level * 1.25f);
@@ -55,20 +57,6 @@ public class PokemonEntity extends GameObject {
         }else{
             this.sprite = sprites[0];
         }
-    }
-
-    private int counter = 5 * 20;
-    @Override
-    public void tick() {
-        // If despawning should be in PokemonEntity;
-
-//        counter--;
-//        if(counter <= 0){
-//            if(!isPersistent){
-//                Window.getCurrentScene().removeGameObjectFromScene(this);
-//                EventBus.invoke(new PokemonDespawnEvent());
-//            }
-//        }
     }
 
     @Override

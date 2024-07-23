@@ -2,6 +2,8 @@ package game;
 
 import org.joml.Vector2f;
 
+import java.util.Objects;
+
 public class Transform {
     public Vector2f position;
     public Vector2f scale;
@@ -46,5 +48,18 @@ public class Transform {
                 "position=" + position +
                 ", scale=" + scale +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Transform transform = (Transform) o;
+        return Objects.equals(position, transform.position) && Objects.equals(scale, transform.scale);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(position, scale);
     }
 }

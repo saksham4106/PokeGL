@@ -13,6 +13,7 @@ import utils.Utils;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class LoadGame {
@@ -52,11 +53,19 @@ public class LoadGame {
                 }
             }
 
+            String[] pokeballs_s = lines[5].split(":", 2)[1].split(",");
+            int[] pokeballs = Arrays.stream(pokeballs_s).mapToInt(Integer::parseInt).toArray();
+
             player.poketeam = pokeTeam;
             player.pokemons = pokemons;
             player.name = name;
             player.setPosition(pos.x , pos.y);
             player.zIndex = zIndex;
+            player.poke_balls = pokeballs[0];
+            player.super_balls = pokeballs[1];
+            player.ultra_balls = pokeballs[2];
+            player.master_balls = pokeballs[3];
+
             return player;
 
         } catch (Exception e) {

@@ -51,6 +51,7 @@ public class SaveGame {
             }
 
             printWriter.printf("pokemons:{%s}\n", ps);
+            printWriter.printf("pokeballs:%d,%d,%d,%d\n", player.poke_balls, player.super_balls, player.ultra_balls, player.master_balls);
 
 
             printWriter.close();

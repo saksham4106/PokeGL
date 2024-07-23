@@ -1,5 +1,9 @@
 package callback;
 
+import events.EventBus;
+import events.KeyPressEvent;
+import events.TypeEvent;
+
 import static org.lwjgl.glfw.GLFW.*;
 
 public class KeyEventListener {
@@ -13,10 +17,17 @@ public class KeyEventListener {
         }else if(action == GLFW_RELEASE){
             keys[key] = false;
         }
+
+        EventBus.invoke(new KeyPressEvent(key, action));
     }
 
     public static boolean isKeyPressed(int key){
         if(key > GLFW_KEY_LAST) return false;
         return keys[key];
+    }
+
+    public static void charCallback(long window, int unicode) {
+        EventBus.invoke(new TypeEvent(unicode));
+
     }
 }

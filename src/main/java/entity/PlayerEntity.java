@@ -17,6 +17,7 @@ import renderer.Sprite;
 import renderer.Spritesheet;
 import renderer.Texture;
 import scenes.Scene;
+import scenes.SelectTeamScene;
 import scenes.WildBattleScene;
 import scenes.World;
 import serialization.SaveGame;
@@ -32,7 +33,7 @@ import static org.lwjgl.glfw.GLFW.*;
 public class PlayerEntity extends GameObject {
 
     public Spritesheet upSpriteSheet = Assets.getSpritesheet("", new Spritesheet(Assets.getTexture("assets/textures/playerUp.png"),
-            68, 48, 4));;
+            68, 48, 4));
     public Spritesheet downSpriteSheet = Assets.getSpritesheet("", new Spritesheet(Assets.getTexture("assets/textures/playerDown.png"),
                 68, 48, 4));
     public Spritesheet leftSpriteSheet = Assets.getSpritesheet("", new Spritesheet(Assets.getTexture("assets/textures/playerLeft.png"),
@@ -45,6 +46,11 @@ public class PlayerEntity extends GameObject {
     public String name;
     public List<PokemonEntity> poketeam = new ArrayList<>();
     public List<PokemonEntity> pokemons = new ArrayList<>();
+    public PokemonEntity selectedPokemon;
+    public int poke_balls;
+    public int super_balls;
+    public int ultra_balls;
+    public int master_balls;
 
     private AnimationState animationState;
     private EntityFacing facing;
@@ -55,6 +61,7 @@ public class PlayerEntity extends GameObject {
     private Scene scene;
 
     private ButtonObject battleButton;
+
 
     private final Random random = new Random();
 
@@ -197,7 +204,7 @@ public class PlayerEntity extends GameObject {
     }
 
     private void spawnPokemon(){
-        Pokemon pokemon = Pokemons.get(random.nextInt(Pokemons.pokemons.size() - 1));
+        Pokemon pokemon = Pokemons.get(random.nextInt(Pokemons.pokemons.size() - 2 ) + 1);
         targetPokemon = new PokemonEntity(pokemon);
 
         Vector2f facingVector = new Vector2f(this.facing == EntityFacing.LEFT ? -1 :
@@ -222,7 +229,8 @@ public class PlayerEntity extends GameObject {
         scene.removeGameObjectFromScene(targetPokemon);
         scene.removeGameObjectFromScene(battleButton);
 
-        Window.setScene("battle", new WildBattleScene(targetPokemon, this));
+//        Window.setScene("battle", new WildBattleScene(targetPokemon, this));
+        Window.setScene("select_team", new SelectTeamScene(this, targetPokemon));
     }
 
 

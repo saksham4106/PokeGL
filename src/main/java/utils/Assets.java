@@ -11,6 +11,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class Assets {
@@ -67,7 +68,7 @@ public class Assets {
     }
 
     public static String readFileAsString(String path) {
-        return new BufferedReader(new InputStreamReader(Thread.currentThread().getContextClassLoader().getResourceAsStream(path))).lines()
+        return new BufferedReader(new InputStreamReader(Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResourceAsStream(path)))).lines()
                 .collect(Collectors.joining(System.lineSeparator()));
     }
 

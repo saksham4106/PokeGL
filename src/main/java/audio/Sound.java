@@ -1,5 +1,6 @@
 package audio;
 
+import game.Window;
 import org.lwjgl.BufferUtils;
 import utils.Assets;
 
@@ -41,7 +42,7 @@ public class Sound {
         }
 
         if (rawAudioBuffer == null) {
-            System.out.println("Could not load sound '" + filepath + "'");
+            Window.LOGGER.error("Could not load sound '" + filepath + "'");
             stackPop();
             stackPop();
             return;

@@ -3,9 +3,21 @@ package pokemon.properties;
 public class PokemonMove {
     public int id;
     public String name;
+    public PokemonType type;
+    public int accuracy;
+    public int power;
+    public int pp;
+    public int priority;
+    public String desc;
 
-    public PokemonMove(int id, String name, PokemonType type, int accuracy, int power, int pp, int priority, String desc){
-        this.name = name;
+    public PokemonMove(int id, String name, PokemonType type, int accuracy, int power, int pp, int priority, String desc) {
         this.id = id;
+        this.name = name;
+        this.type = type;
+        this.accuracy = accuracy;
+        this.power = power;
+        this.pp = pp;
+        this.priority = priority;
+        this.desc = desc;
     }
 }

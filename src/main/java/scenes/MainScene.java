@@ -62,7 +62,7 @@ public class MainScene extends Scene {
             fps = (int) (1 / dt);
             counter = 0;
         }
-        this.renderer.drawString("FPS: " + fps, -395, 230, 0.15f, Fonts.ATARI_CLASSIC_FONT,
+        this.renderer.drawString("FPS: " + fps, 5, Window.height - 20, 0.15f, Fonts.ATARI_CLASSIC_FONT,
                 ColorUtils.getColor(Color.BLACK), false);
 
         if(KeyEventListener.isKeyPressed(GLFW_KEY_1)){

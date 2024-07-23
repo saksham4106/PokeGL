@@ -86,6 +86,10 @@ public abstract class Scene {
         if(throwaway) Window.removeScene(this.sceneName);
     }
 
+    public void clearScene(){
+        this.renderer.clear();
+        this.sceneGameObjects.clear();
+    }
     /*
     For each loop will cause ConcurrentModificationException, Shut up Intellij.
     (Tick method of a gameObject might modify the list sceneGameObjects)
@@ -111,7 +115,4 @@ public abstract class Scene {
     public void save(){
 
     }
-
-
-
 }
