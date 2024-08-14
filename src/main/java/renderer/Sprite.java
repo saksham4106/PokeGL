@@ -1,5 +1,6 @@
 package renderer;
 
+import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 
@@ -68,12 +69,7 @@ public class Sprite {
         return texCoords;
     }
 
-    public static Sprite resize(float scale, Sprite sprite){
-        Sprite output = new Sprite(sprite);
-        output.width *= scale;
-        output.height *= scale;
-        return output;
-    }
+
 
 
 }

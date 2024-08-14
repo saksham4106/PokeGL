@@ -4,6 +4,7 @@ import callback.MouseEventListener;
 import collision.CollisionDetection;
 import game.Transform;
 import org.joml.Vector2f;
+import renderer.Sprite;
 
 import java.io.File;
 import java.io.IOException;
@@ -39,6 +40,27 @@ public class Utils {
             words[i] = words[i].substring(0,1).toUpperCase() + words[i].substring(1);
         }
         return String.join(" ", words);
+    }
+
+    public static Sprite resize(float scale, Sprite sprite){
+        Sprite output = new Sprite(sprite);
+        output.width *= scale;
+        output.height *= scale;
+        return output;
+    }
+
+    public static Sprite resize(float width, float height, Sprite sprite){
+        Sprite output = new Sprite(sprite);
+        output.width = width;
+        output.height = height;
+        return output;
+    }
+
+    public static Sprite flip(Sprite sprite){
+        Vector2f[] prevTex = sprite.getTexCoords();
+        Sprite output = new Sprite(sprite);
+        output.setTexCoords(new Vector2f[]{prevTex[1], prevTex[0], prevTex[3], prevTex[2]});
+        return output;
     }
 
 

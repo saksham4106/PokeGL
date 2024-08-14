@@ -134,19 +134,23 @@ public class Window {
         }
     }
 
+    public static void setScene(String sceneName){
+        setScene(sceneName, null);
+    }
+
     public static Scene getCurrentScene() {
         return currentScene;
     }
 
     public static void pushScene(Scene scene){
         uiStack.push(scene);
+        scene.init();
     }
 
-    public static Scene popScene(){
+    public static void popScene(){
         if(!uiStack.isEmpty()){
-            return uiStack.pop();
+            uiStack.pop().clearScene();
         }
-        return null;
     }
 
     public static Scene getCurrentUIScene(){
@@ -171,6 +175,9 @@ public class Window {
             double currentTime = glfwGetTime();
             if (currentTime - lastTime >= 0.05) {
                 currentScene.tick();
+                if(!uiStack.isEmpty()){
+                    uiStack.peek().tick();
+                }
             }
             glfwPollEvents();
 

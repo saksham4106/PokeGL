@@ -97,11 +97,7 @@ public class WildBattleScene extends Scene {
         ButtonObject ball4 = new ButtonObject(950, 20, () -> throwPokeball(Pokeball.MASTERBALL), new Sprite(30, 30, Assets.getTexture("assets/textures/master_ball.png")), 3);
         addGameObjectstoScene(ball1, ball2, ball3, ball4);
 
-        ButtonObject defeatedButton = new ButtonObject(100, 500, "Resign ",
-                () -> {
-                     Window.setScene("main", new MainScene());
-//                     player.addPokemonToInventory(pokemon);
-        });
+        ButtonObject defeatedButton = new ButtonObject(100, 500, "Resign ", this::exitBattle);
 
 
 
@@ -143,9 +139,15 @@ public class WildBattleScene extends Scene {
                 no = true;
             }
         }
-        if(high) return (int) ((self.attack + move.power) * 0.5f);
-        if(low) return (int) ((self.attack + move.power) * 0.2f);
-        if(no) return (int) ((self.attack + move.power) * 0.1f);
+        if(high) {
+            return (int) ((self.attack + move.power) * 0.5f);
+        }
+        if(low) {
+            return (int) ((self.attack + move.power) * 0.2f);
+        }
+        if(no) {
+            return (int) ((self.attack + move.power) * 0.1f);
+        }
 
         return((int) ((self.attack + move.power) * 0.3f));
     }
@@ -175,56 +177,84 @@ public class WildBattleScene extends Scene {
             pokMsg += "\n" +  pok.name + " fainted";
             oppMsg += "\n" + oppPok.name + " won!";
             playerWon = "no";
+            boolean lost = true;
+            for(PokemonEntity p: player.poketeam){
+                if (p.hp > 0) {
+                    lost = false;
+                    break;
+                }
+            }
+            if(!lost){
+                addGameObjectstoScene(new ButtonObject(1100, 50, "back", () -> {
+                    Window.setScene("select_team", new SelectTeamScene(player, oppPok));
+                }));
+            }else{
+
+            }
+
+
         }else if(oppPok.hp == 0){
             oppMsg += "\n" + oppPok.name + " fainted";
             pokMsg += "\n" + pok.name + " won!";
             playerWon = "yes";
+
+            addGameObjectstoScene(new ButtonObject(1100, 50, "continue", () -> {
+                Window.pushScene(new Scene() {
+                    @Override
+                    public void init() {
+                        super.init();
+                        GameObject bg = new GameObject(0, 0, Window.width, Window.height, new Sprite(ColorUtils.WHITE), true);
+                        bg.zIndex = 10;
+                        addGameObjectToScene(bg);
+                        TextObject t = new TextObject(100, 400, 0.7f, "To catch the pokemon, do not defeat it", Fonts.LEAGUE_SPARTA_FONT,
+                                11, true, ColorUtils.BLACK);
+                        renderer.addText(t);
+                        healPokemon();
+                        addGameObjectToScene(new ButtonObject(300, 300, "Go back to main scene",
+                                () -> exitBattle(), new Sprite(new Vector4f(0.5f)), 11));
+
+                    }
+                });
+            }));
         }
     }
 
-    @Override
-    public void tick() {
-        super.tick();
-    }
-
-    private void playerWon(){
-        oppPok.hp = 1; // to stop repeatedly executing this.
-    }
-
-    private void wildWon(){
-        pok.hp = 1; // to stop repeatedly executing this.
-        this.clearScene();
-        this.setBackground(ColorUtils.WHITE);
-//        addGameObjectstoScene(new GameObject(0 ,0 , 100, 100, new Sprite(100, 100, ColorUtils.BLACK), true));
-        renderer.addText(new TextObject(200, 300, 1, "You lost the battle against " + Utils.capitalize(oppPok.name), Fonts.ATARI_CLASSIC_FONT, 1, true, ColorUtils.BLACK));
-        addGameObjectstoScene(new ButtonObject(600, 250, "Back", () -> Window.setScene("main", null), new Sprite(0, 0, new Vector4f(0, 0.4f, 0, 1))));
-    }
 
     private void throwPokeball(Pokeball pokeball){
+        if(oppPok.hp <= 0 || pok.hp <= 0) return;
+
         float healthPercent = (float) this.oppPok.hp / this.oppPok.max_hp;
 
         switch (pokeball){
             case POKEBALL -> {
-                if(this.player.poke_balls > 0)  this.player.poke_balls--;
-                if(healthPercent < 0.25f){
-                    catchPokemon();
+                if(this.player.poke_balls > 0)  {
+                    this.player.poke_balls--;
+                    if(healthPercent < 0.25f){
+                        catchPokemon();
+                    }
                 }
             }
             case SUPERBALL -> {
-                if(this.player.super_balls > 0)  this.player.super_balls--;
-                if(healthPercent < 0.35f){
-                    catchPokemon();
+                if(this.player.super_balls > 0)  {
+                    this.player.super_balls--;
+                    if(healthPercent < 0.35f){
+                        catchPokemon();
+                    }
                 }
             }
             case ULTRABALL -> {
-                if(this.player.ultra_balls > 0)  this.player.ultra_balls--;
-                if(healthPercent < 0.5f){
-                    catchPokemon();
+                if(this.player.ultra_balls > 0)  {
+                    this.player.ultra_balls--;
+                    if(healthPercent < 0.5f){
+                        catchPokemon();
+                    }
                 }
             }
             case MASTERBALL -> {
-                if(this.player.master_balls > 0)  this.player.master_balls--;
-                catchPokemon();
+                if(this.player.master_balls > 0) {
+                    this.player.master_balls--;
+                    catchPokemon();
+                }
             }
         }
     }
@@ -235,18 +265,31 @@ public class WildBattleScene extends Scene {
             @Override
             public void init() {
                 super.init();
-                this.setBackground(ColorUtils.BLACK);
-            }
+                GameObject bg = new GameObject(0, 0, Window.width, Window.height, new Sprite(ColorUtils.WHITE), true);
+                bg.zIndex = 10;
+                addGameObjectToScene(bg);
+                TextObject t = new TextObject(100, 400, 0.7f, "Congratulations! You caught a " + oppPok.name, Fonts.LEAGUE_SPARTA_FONT,
+                        11, true, ColorUtils.BLACK);
+                renderer.addText(t);
+                addGameObjectToScene(new ButtonObject(300, 300, "Go back to main scene",
+                        () -> exitBattle(), new Sprite(new Vector4f(0.5f)), 11));
 
-            @Override
-            public void update(float dt) {
-                super.update(dt);
             }
         });
-        // DO final display stuff
 
     }
 
+    private void exitBattle(){
+        Window.popScene();
+        Window.setScene("main");
+        healPokemon();
+    }
+    private void healPokemon(){
+        for(PokemonEntity p : player.poketeam){
+            int newHp = (int) (p.max_hp * 0.75f);
+            p.hp = p.hp > newHp ? p.max_hp : newHp;
+        }
+    }
 
 
     @Override
@@ -277,9 +320,9 @@ public class WildBattleScene extends Scene {
     @Override
     public void destroy() {
         super.destroy();
-        for(PokemonEntity p : this.player.poketeam){
-            p.hp = p.max_hp;
-        }
+//        for(PokemonEntity p : this.player.poketeam){
+//            p.hp = p.max_hp;
+//        }
 
         player.removeTarget();
         this.renderer.clear();

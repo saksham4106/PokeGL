@@ -33,6 +33,10 @@ public class MainScene extends Scene {
         // load player
         player = new PlayerEntity("Saksham4106", 32, 48, new Vector2f(1250, -900), 1,
                 Assets.getTexture("assets/textures/playerDown.png"), world);
+        player.poke_balls = 20;
+        player.ultra_balls = 5;
+        player.master_balls = 1;
+        player.super_balls = 5;
         PlayerEntity p = LoadGame.loadPlayer(player);
         if(p != null){
             player = p;

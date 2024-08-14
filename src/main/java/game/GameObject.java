@@ -51,6 +51,11 @@ public class GameObject {
         this.markDirty(true);
     }
 
+    public GameObject(float x, float y, float width, float height, Sprite sprite, boolean isUIElement, int zIndex){
+        this(x,y, width, height, sprite, isUIElement);
+        this.zIndex = zIndex;
+    }
+
     public GameObject(GameObject go){
         this(go.transform, go.sprite, go.zIndex);
     }
@@ -140,7 +145,10 @@ public class GameObject {
     }
 
     public void setColor(Vector4f color){
-        this.sprite.color.set(color);
-        this.markDirty(true);
+        if(!this.sprite.color.equals(color)){
+            this.sprite.color.set(color);
+            this.markDirty(true);
+        }
+
     }
 }

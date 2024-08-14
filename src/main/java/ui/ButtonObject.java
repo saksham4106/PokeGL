@@ -2,6 +2,7 @@ package ui;
 
 import audio.Sound;
 import callback.MouseEventListener;
+import fonts.FontLoader;
 import fonts.Fonts;
 import game.GameObject;
 import game.Transform;
@@ -24,6 +25,7 @@ public class ButtonObject extends GameObject {
 
     public TextObject textObject;
     public IClickable onClick;
+    public boolean disabled = false;
 
     public ButtonObject(float startX, float startY, String label, IClickable onClick){
         this(startX, startY, label, onClick, new Sprite(0, 0, new Vector4f(0.5f, 0.5f, 0.5f, 0.7f)), 1);
@@ -42,6 +44,11 @@ public class ButtonObject extends GameObject {
     }
 
     public ButtonObject(float startX, float startY, String label, float scale, IClickable onClick, Sprite sprite, int zIndex){
+        this(startX, startY, label, scale, onClick, sprite, zIndex, Fonts.OPEN_SANS_FONT, ColorUtils.BLACK);
+    }
+
+    public ButtonObject(float startX, float startY, String label, float scale, IClickable onClick, Sprite sprite, int zIndex,
+                        FontLoader fontLoader, Vector4f textColor){
         int xPadding = 5;
         int yPadding = 5;
         float buttonWidth = 0;
@@ -49,7 +56,7 @@ public class ButtonObject extends GameObject {
 
         if(!label.isEmpty()){
             TextObject textObject = new TextObject(startX + xPadding, startY + yPadding,
-                    scale, label, Fonts.OPEN_SANS_FONT, 26, true, new Vector4f(1, 1, 1, 1));
+                    scale, label, fontLoader, zIndex + 1, true, textColor);
             this.textObject = textObject;
             textObject.addY(MathUtil.normalizePosition(new Vector2f(0, textObject.bottomEnd)).y);
 
@@ -80,6 +87,11 @@ public class ButtonObject extends GameObject {
 
     @Override
     public void update(float dt, Renderer renderer) {
+        if(disabled){
+            this.setColor(new Vector4f(0.5f, 0.5f, 0.5f, 1));
+            return;
+        }
+
         if(Utils.cursorInTransform(this.transform)){
             onHover();
         }else{
@@ -123,5 +135,9 @@ public class ButtonObject extends GameObject {
 
     public interface IClickable{
         void onClick();
+    }
+
+    public void disable(boolean disabled){
+        this.disabled = disabled;
     }
 }

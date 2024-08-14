@@ -20,32 +20,36 @@ public class TextureAtlasCreator {
         int x = 0;
         int y = 0;
         List<File> pokemonFiles = new ArrayList<>();
+        StringBuilder s = new StringBuilder();
         for(int i = 1; i <= 721; i++){
-            File file = new File("src/main/resources/assets/pokemonImages/" + i + "_frontFace.png");
+            File file = new File("src/main/resources/assets/pokemonImages/" + i + "_backFace.png");
+            if(!file.exists()) s.append(i).append(", ");
             pokemonFiles.add(file);
         }
-
+        System.out.println(s);
+        File f = new File("empty.png");
 
         for (File file : pokemonFiles) {
+            BufferedImage pokemonImage;
                 try{
-                    BufferedImage pokemonImage = ImageIO.read(file);
-                    graphics2D.drawImage(pokemonImage, x * 96, y * 96, 96, 96, (img, infoflags, x1, y1, width, height) -> false);
-                    x += 1;
-                    if(x > 27){
-                        x = 0;
-                        y += 1;
-                    }
+                    pokemonImage = ImageIO.read(file);
+
                 }catch (Exception ignored){
-
+                    pokemonImage = ImageIO.read(f);
                 }
-
+            graphics2D.drawImage(pokemonImage, x * 96, y * 96, 96, 96, (img, infoflags, x1, y1, width, height) -> false);
+            x += 1;
+            if(x > 27){
+                x = 0;
+                y += 1;
+            }
 
         }
 //        BufferedImage bul = ImageIO.read(new File("src/main/resources/assets/pokemonImages/1_backFace.png"));
 //        BufferedImage bul1 = ImageIO.read(new File("src/main/resources/assets/pokemonImages/1_frontFace.png"));
 
 //        graphics2D.drawImage(bul1, 96, 0, 96,96,(img, infoflags, x, y, width, height) -> false );
-        ImageIO.write(textureAtlas, "png", new File("frontFaces.png"));
+        ImageIO.write(textureAtlas, "png", new File("damn.png"));
 
 
 //        IntBuffer width = BufferUtils.createIntBuffer(1);

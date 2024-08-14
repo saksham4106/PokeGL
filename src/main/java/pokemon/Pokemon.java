@@ -1,5 +1,6 @@
 package pokemon;
 
+import game.Window;
 import pokemon.properties.PokemonMove;
 import pokemon.properties.PokemonType;
 import pokemon.properties.PokemonTypes;
@@ -67,6 +68,7 @@ public class Pokemon {
             }
             if(t2_moves.isEmpty()) moves.addAll(List.of(normal_moves.get(0), t1_moves.get(2)));
             if(normal_moves.isEmpty()) moves.addAll(List.of(t2_moves.get(0), t2_moves.get(1)));
+            Window.LOGGER.debug(this.name);
         }
 
         return moves;
