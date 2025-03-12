@@ -1,5 +1,8 @@
 package pokemon.properties;
 
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
 public class PokemonMove {
     public int id;
     public String name;
@@ -19,5 +22,11 @@ public class PokemonMove {
         this.pp = pp;
         this.priority = priority;
         this.desc = desc;
+    }
+
+    public String getFormattedName(){
+        String format = this.name.replace('_', ' ').replace('-', ' ');
+        return Arrays.stream(format.split(" ")).map(c -> Character.toUpperCase(c.charAt(0)) + c.substring(1))
+                .collect(Collectors.joining(" "));
     }
 }

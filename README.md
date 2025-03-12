@@ -1,5 +1,5 @@
 **TODO**
 
 * Improve static global classes
-* Make a *better* world system
+* Make utils.a *better* world system
 * yes.

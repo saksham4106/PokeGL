@@ -84,11 +84,14 @@ public class WildBattleScene extends Scene {
 //        TextObject t3 = new TextObject(520, 30, 0.2f, moves.get(2).name + " ", Fonts.OPEN_SANS_FONT, 3, true, ColorUtils.BLACK);
 //        ButtonObject move4 = new ButtonObject(700, 10, () -> playerAttack(moves.get(3)), new Sprite(200, 75, new Vector4f(0.3f, 0.3f, 0.3f, 1)), 2);
 //        TextObject t4 = new TextObject(720, 30, 0.2f, moves.get(3).name + " ", Fonts.OPEN_SANS_FONT, 3, true, ColorUtils.BLACK);
-        float h = Fonts.OPEN_SANS_FONT.getMaxHeight(0.2f);
-        ButtonObject move1 = new ButtonObject(50, 10, moves.get(0).name, 0.2f, () -> playerAttack(moves.get(0)), new Sprite(100,h, new Vector4f(0.7f, 0.7f, 0.7f, 1)), 3);
-        ButtonObject move2 = new ButtonObject(200, 10, moves.get(1).name, 0.2f, () -> playerAttack(moves.get(1)), new Sprite(100,h, new Vector4f(0.7f, 0.7f, 0.7f, 1)), 3);
-        ButtonObject move3 = new ButtonObject(350, 10, moves.get(2).name, 0.2f, () -> playerAttack(moves.get(2)), new Sprite(100,h, new Vector4f(0.7f, 0.7f, 0.7f, 1)), 3);
-        ButtonObject move4 = new ButtonObject(500, 10, moves.get(3).name, 0.2f, () -> playerAttack(moves.get(3)), new Sprite(100,h, new Vector4f(0.7f, 0.7f, 0.7f, 1)), 3);
+        float h = Fonts.ATARI_CLASSIC_FONT.getMaxHeight(0.2f) + 5;
+
+        float start = 50;
+        float gap = 20;
+        ButtonObject move1 = new ButtonObject(start,  10, moves.get(0).getFormattedName(), 0.2f, () -> playerAttack(moves.get(0)), new Sprite(100,h, ColorUtils.getColor(0.7f)), 3);
+        ButtonObject move2 = new ButtonObject(start + move1.getSprite().width + gap, 10, moves.get(1).getFormattedName(), 0.2f, () -> playerAttack(moves.get(1)), new Sprite(100,h, ColorUtils.getColor(0.7f)), 3);
+        ButtonObject move3 = new ButtonObject(start + move2.getSprite().width + gap, 10, moves.get(2).getFormattedName(), 0.2f, () -> playerAttack(moves.get(2)), new Sprite(100,h, ColorUtils.getColor(0.7f)), 3);
+        ButtonObject move4 = new ButtonObject(start + move3.getSprite().width + gap, 10, moves.get(3).getFormattedName(), 0.2f, () -> playerAttack(moves.get(3)), new Sprite(100,h, ColorUtils.getColor(0.7f)), 3);
         addGameObjectstoScene(move1,move2,move3,move4);
 
         ButtonObject ball1 = new ButtonObject(800, 20, () -> throwPokeball(Pokeball.POKEBALL), new Sprite(30, 30, Assets.getTexture("assets/textures/poke_ball.png")), 3);
@@ -97,7 +100,7 @@ public class WildBattleScene extends Scene {
         ButtonObject ball4 = new ButtonObject(950, 20, () -> throwPokeball(Pokeball.MASTERBALL), new Sprite(30, 30, Assets.getTexture("assets/textures/master_ball.png")), 3);
         addGameObjectstoScene(ball1, ball2, ball3, ball4);
 
-        ButtonObject defeatedButton = new ButtonObject(100, 500, "Resign ", this::exitBattle);
+        ButtonObject defeatedButton = new ButtonObject(100, 500, "Resign", this::exitBattle);
 
 
 

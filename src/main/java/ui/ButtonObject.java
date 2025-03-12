@@ -43,8 +43,8 @@ public class ButtonObject extends GameObject {
         this(startX, startY, label, 0.5f, onClick, sprite, zIndex);
     }
 
-    public ButtonObject(float startX, float startY, String label, float scale, IClickable onClick, Sprite sprite, int zIndex){
-        this(startX, startY, label, scale, onClick, sprite, zIndex, Fonts.OPEN_SANS_FONT, ColorUtils.BLACK);
+    public  ButtonObject(float startX, float startY, String label, float scale, IClickable onClick, Sprite sprite, int zIndex){
+        this(startX, startY, label, scale, onClick, sprite, zIndex, Fonts.ATARI_CLASSIC_FONT, ColorUtils.BLACK);
     }
 
     public ButtonObject(float startX, float startY, String label, float scale, IClickable onClick, Sprite sprite, int zIndex,
@@ -54,22 +54,27 @@ public class ButtonObject extends GameObject {
         float buttonWidth = 0;
         float buttonHeight = 0;
 
-        if(!label.isEmpty()){
+        if(!label.isEmpty()) {
             TextObject textObject = new TextObject(startX + xPadding, startY + yPadding,
                     scale, label, fontLoader, zIndex + 1, true, textColor);
+
+            textObject.addPos(new Vector2f(0, textObject.bottomEnd));
+
+            buttonWidth = textObject.totalWidth;
+            buttonHeight = textObject.totalHeight + textObject.bottomEnd;
+
+            if (sprite.width > buttonWidth) {
+                textObject.addPos(new Vector2f((sprite.width - buttonWidth) / 2f, 0));
+            }
+            if (sprite.height > buttonHeight) {
+                textObject.addPos( new Vector2f(0,(sprite.height - buttonHeight) / 2f));
+            }
+
             this.textObject = textObject;
-            textObject.addY(MathUtil.normalizePosition(new Vector2f(0, textObject.bottomEnd)).y);
-
-            buttonWidth = textObject.totalWidth + 2 * xPadding;
-            buttonHeight = textObject.totalHeight + 2 * yPadding + textObject.bottomEnd;
-
         }
 
-        //Re-evaluate Button size
-//        buttonWidth = Math.max(buttonWidth, sprite.width + 2 * xPadding);
-//        buttonHeight = Math.max(buttonHeight, sprite.height + 2 * yPadding + textObject.bottomEnd);
-        buttonWidth = Math.max(buttonWidth, sprite.width);
-        buttonHeight = Math.max(buttonHeight, sprite.height);
+        buttonWidth = Math.max(buttonWidth, sprite.width) + 2 * xPadding;
+        buttonHeight = Math.max(buttonHeight, sprite.height) + 2 * yPadding;
 
         Transform transform = new Transform(startX, startY, buttonWidth, buttonHeight);
         sprite.width = buttonWidth;
@@ -101,7 +106,7 @@ public class ButtonObject extends GameObject {
         }
     }
 
-    int cooldown = 100;
+    int cooldown = 10;
     @Override
     public void tick() {
         super.tick();
@@ -114,7 +119,7 @@ public class ButtonObject extends GameObject {
             this.onClick.onClick();
             Sound sound = Assets.getSound("assets/sounds/buttonpress.ogg", new Sound("assets/sounds/buttonpress.ogg", false));
             sound.play();
-            cooldown = 100;
+            cooldown = 10;
         }
 
     }

@@ -22,7 +22,8 @@ public class LoadGame {
         try {
             Utils.createFileIfDoesntExist("data/player_data.poke");
             String data = new String(Files.readAllBytes(Paths.get("data/player_data.poke")));
-            String[] lines = data.split("\n");
+
+            String[] lines = data.split(System.lineSeparator());
             if(lines.length < 2){
                 return null;
             }

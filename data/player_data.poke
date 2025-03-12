@@ -1,6 +1,0 @@
-name:Saksham4106
-position:1406.646484|-972.544189
-zIndex:1
-poketeam:{id:152,name:chikorita,max_hp:45,attack:49,defence:65,speed:45,xp:1250,level:10,types:grass,moves:magical_leaf|grassy_terrain|double_edge|grassy_terrain~id:601,name:klinklang,max_hp:60,attack:100,defence:115,speed:90,xp:99383,level:43,types:steel,moves:mirror_shot|flash_cannon|protect|autotomize~id:717,name:yveltal,max_hp:126,attack:131,defence:95,speed:99,xp:219520,level:56,types:dark|flying,moves:torment|taunt|roost|sleep_talk}
-pokemons:{id:152,name:chikorita,max_hp:45,attack:49,defence:65,speed:45,xp:1250,level:10,types:grass,moves:magical_leaf|grassy_terrain|double_edge|grassy_terrain~id:601,name:klinklang,max_hp:60,attack:100,defence:115,speed:90,xp:99383,level:43,types:steel,moves:mirror_shot|flash_cannon|protect|autotomize~id:717,name:yveltal,max_hp:126,attack:131,defence:95,speed:99,xp:219520,level:56,types:dark|flying,moves:torment|taunt|roost|sleep_talk}
-pokeballs:20,5,3,1

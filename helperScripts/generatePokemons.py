@@ -3,7 +3,7 @@ import json
 import random
 s = requests.session()
 
-with open('Pokemons.java', 'a') as f:
+with open('Pokemons.java', 'utils.a') as f:
     f2 = open('movesData.json', 'r')
     data = json.loads(f2.read())
     for i in range(1, 925):
@@ -114,7 +114,7 @@ with open('Pokemons.java', 'a') as f:
 # import json
 # s = requests.session()
 
-# with open('PokemonAbilities.java', 'a') as f:
+# with open('PokemonAbilities.java', 'utils.a') as f:
 #     for i in range(234, 368):
 #         url = f"https://pokeapi.co/api/v2/ability/{i}"
 #         pokemon_data = s.get(url, allow_redirects=True).content
@@ -136,7 +136,7 @@ with open('Pokemons.java', 'a') as f:
 # import json
 # s = requests.session()
 #
-# with open('movesData.json', 'a') as f:
+# with open('movesData.json', 'utils.a') as f:
 #     data = {}
 #     try:
 #         for i in range( 1, 620):

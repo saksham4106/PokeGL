@@ -1,3 +1,5 @@
+import org.gradle.nativeplatform.platform.internal.DefaultNativePlatform
+
 plugins {
     id 'java'
 	id 'application'
@@ -12,7 +14,13 @@ repositories {
 
 project.ext.lwjglVersion = "3.3.1"
 project.ext.jomlVersion = "1.10.4"
-project.ext.lwjglNatives = "natives-linux"
+
+if(DefaultNativePlatform.currentOperatingSystem.isWindows()){
+    project.ext.lwjglNatives = "natives-windows"
+}else{
+    project.ext.lwjglNatives = "natives-linux"
+}
+
 
 dependencies {
     implementation platform("org.lwjgl:lwjgl-bom:$lwjglVersion")
@@ -57,7 +65,7 @@ application {
 
 task fatJar(type: Jar) {
     manifest.from jar.manifest
-    classifier = 'all'
+    archiveClassifier = 'all'
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 
     from {

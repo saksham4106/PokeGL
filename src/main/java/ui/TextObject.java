@@ -6,6 +6,7 @@ import fonts.Fonts;
 import fonts.Text;
 import game.GameObject;
 import game.Transform;
+import org.joml.Vector2f;
 import org.joml.Vector4f;
 import renderer.Sprite;
 import utils.Assets;
@@ -107,19 +108,14 @@ public class TextObject {
         this.charObjects.forEach(gameObject -> gameObject.markDirty(isDirty));
     }
 
-    public void addX(float x){
-        this.charObjects.forEach(gameObject -> gameObject.getTransform().position.x += x);
-        markDirty(true);
-    }
     
     public void setColor(Vector4f color){
         this.charObjects.forEach(gameObject -> gameObject.getSprite().color = color);
         markDirty(true);
     }
 
-
-    public void addY(float y){
-        this.charObjects.forEach(gameObject ->  gameObject.getTransform().position.y += y);
+    public void addPos(Vector2f pos){
+        this.charObjects.forEach(gameObject -> gameObject.addPosition(pos));
         markDirty(true);
     }
 

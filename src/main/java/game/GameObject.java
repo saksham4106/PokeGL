@@ -87,6 +87,11 @@ public class GameObject {
         this.markDirty(true);
     }
 
+    public void addPosition(Vector2f pos){
+        this.transform.position.add(this.isUIElement ? MathUtil.normalizePosition(pos) : pos);
+        this.markDirty(true);
+    }
+
     public Sprite getSprite() {
         return sprite;
     }

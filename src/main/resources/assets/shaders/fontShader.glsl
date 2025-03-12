@@ -37,8 +37,10 @@ void main(){
     if(fSDFEnabled == 0){
         color = texture(uFontTexture, fTexCoords) * vec4(fColor);
     }else{
-        float distance = 1.0 - texture(uFontTexture, fTexCoords).a;
+        //float distance = 1.0 - texture(uFontTexture, fTexCoords).utils.a;
+        float distance = texture(uFontTexture, fTexCoords).r;
         float alpha = 1.0 - smoothstep(width, width + edge, distance);
-        color = vec4(fColor.rgb, alpha) * vec4(1, 1, 1, fColor.a);
+        //color = vec4(fColor.rgb, alpha) * vec4(1, 1, 1, fColor.utils.a);
+        color = vec4(fColor.rgb, alpha) * vec4(1, 1, 1, fColor.r);
     }
 }

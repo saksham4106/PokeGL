@@ -29,7 +29,7 @@ public class SaveGame {
             PrintWriter printWriter = new PrintWriter(fileWriter);
 
             printWriter.println("name:" + name);
-            printWriter.printf("position:%f|%f\n", transform.position.x, transform.position.y);
+            printWriter.printf("position:%f|%f" + System.lineSeparator(), transform.position.x, transform.position.y);
             printWriter.println("zIndex:" + zIndex);
 
             StringBuilder team = new StringBuilder();
@@ -40,7 +40,7 @@ public class SaveGame {
                 team.deleteCharAt(team.length() - 1);
             }
 
-            printWriter.printf("poketeam:{%s}\n", team);
+            printWriter.printf("poketeam:{%s}" + System.lineSeparator(), team);
 
             StringBuilder ps = new StringBuilder();
             for(PokemonEntity p: pokemons){
@@ -50,8 +50,8 @@ public class SaveGame {
                 ps.deleteCharAt(ps.length() - 1);
             }
 
-            printWriter.printf("pokemons:{%s}\n", ps);
-            printWriter.printf("pokeballs:%d,%d,%d,%d\n", player.poke_balls, player.super_balls, player.ultra_balls, player.master_balls);
+            printWriter.printf("pokemons:{%s}" + System.lineSeparator(), ps);
+            printWriter.printf("pokeballs:%d,%d,%d,%d" + System.lineSeparator(), player.poke_balls, player.super_balls, player.ultra_balls, player.master_balls);
 
 
             printWriter.close();

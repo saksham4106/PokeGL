@@ -87,6 +87,7 @@ public class Shader {
         if (success == GL_FALSE) {
             int len = glGetProgrami(shaderProgramID, GL_INFO_LOG_LENGTH);
             System.out.println("ERROR: \n\tLinking of shaders failed.");
+            System.out.println(this.vertexPath + "," + this.fragmentPath);
             System.out.println(glGetProgramInfoLog(shaderProgramID, len));
 
         }

@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import scenes.Scene;
 import scenes.StartingMenuScene;
+import world.WorldScene;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -65,7 +66,7 @@ public class Window {
         glfwDefaultWindowHints();
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
-        glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
+//        glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
 
         window = glfwCreateWindow(width, height, this.title, NULL, NULL);
         if (window == NULL) {
@@ -89,6 +90,8 @@ public class Window {
             Window.height = height;
             this.isResized = true;
         });
+
+
 
         audioContext.initialise();
         GL.createCapabilities();
@@ -165,20 +168,20 @@ public class Window {
 
         float beginTime = (float) glfwGetTime();
 
-        double lastTime = glfwGetTime();
-
         float endTime;
         float dt = -1.0f;
-
+        float buffer = 0f;
 
         while (!glfwWindowShouldClose(window)) {
-            double currentTime = glfwGetTime();
-            if (currentTime - lastTime >= 0.05) {
+
+            if (buffer >= 1 / 60f) {
+                buffer = 0;
                 currentScene.tick();
                 if(!uiStack.isEmpty()){
                     uiStack.peek().tick();
                 }
             }
+
             glfwPollEvents();
 
             glClearColor(0, 0, 0, 1);
@@ -202,6 +205,7 @@ public class Window {
 
             dt = endTime - beginTime;
             beginTime = endTime;
+            buffer += dt;
         }
         EventBus.invoke(new WindowCloseEvent());
 //        currentScene.save();
