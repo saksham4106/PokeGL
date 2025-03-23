@@ -81,6 +81,18 @@ public class FontLoader {
         return new Vector2f(width * scale, height * scale);
     }
 
+    public static float getYOffset(char c, float scale){
+        String downCharacters = "qypgj";
+        String upCharacters = "\"'";
+        String midCharacters = "-";
+
+        float yOffset = downCharacters.contains(String.valueOf(c)) ? 15 * scale : 0;
+        yOffset = upCharacters.contains(String.valueOf(c)) ? -40 * scale : yOffset;
+        yOffset = midCharacters.contains(String.valueOf(c)) ? -20 * scale : yOffset;
+
+        return yOffset;
+    }
+
     public float getMaxHeight(float scale){
         return getStringDimensions("\"abcdefghijklmnopqrstuvwxyz_~", scale).y + 30 * scale; // yOffset for down characters (y,g,etc)
     }

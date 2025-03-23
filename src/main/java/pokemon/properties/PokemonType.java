@@ -1,5 +1,7 @@
 package pokemon.properties;
 
+import org.joml.Vector4f;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,6 +11,8 @@ public class PokemonType {
     public List<PokemonType> doesNoDamageTo;
     public List<PokemonType> doesLessDamageTo;
     public List<PokemonType> doesHighDamageTo;
+
+    public Vector4f color;
 
     public PokemonType(String name, List<PokemonType> doesNoDamageTo, List<PokemonType> doesLessDamageTo,
                        List<PokemonType> doesHighDamageTo) {

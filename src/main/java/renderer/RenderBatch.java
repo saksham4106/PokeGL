@@ -5,6 +5,7 @@ import game.Window;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 import utils.Assets;
+import utils.MathUtil;
 
 import java.util.*;
 
@@ -213,8 +214,13 @@ public class RenderBatch implements Comparable<RenderBatch> {
             }
 
             // Load position
-            vertices[offset] = gameObject.getTransform().position.x + (xAdd * gameObject.getTransform().scale.x);
-            vertices[offset + 1] = gameObject.getTransform().position.y + (yAdd * gameObject.getTransform().scale.y);
+            Vector2f pos = new Vector2f(gameObject.getTransform().position.x + (xAdd * gameObject.getTransform().scale.x),
+                    gameObject.getTransform().position.y + (yAdd * gameObject.getTransform().scale.y));
+            if(gameObject.isUIElement()){
+                pos = MathUtil.normalizePosition(pos).sub(1, 1);
+            }
+            vertices[offset] = pos.x;
+            vertices[offset + 1] = pos.y;
 
             // Load color
             vertices[offset + 2] = color.x;

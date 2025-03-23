@@ -165,23 +165,20 @@ public class FontRenderer {
 
     public void drawString(String string, float x, float y, float scale, FontLoader fontLoader, Vector4f color,
                            boolean isSDFEnabled){
-//        Vector2f pos = MathUtil.normalizePosition(new Vector2f(x, y));
-        float currentX = x;
+
         float currentY = y;
+        float currentX = x;
 
         // FIXME
-        String downCharacters = "qypgj";
-        String upCharacters = "\"'";
-        String midCharacters = "-";
-
         float spacePadding = fontLoader.getCharacter(' ').xAdvance * scale;
 
         fontBatch.texture = fontLoader.texture;
         fontBatch.isSDFEnabled = isSDFEnabled;
-        for(int charID = 0; charID < string.length(); charID++){
+        for(int charIndex = 0; charIndex < string.length(); charIndex++){
 
-            char c = string.charAt(charID);
+            char c = string.charAt(charIndex);
             Character character = fontLoader.getCharacter(c);
+
             if(c == '\n'){
                 currentY -= fontLoader.lineHeight * scale;
                 currentX = x;
@@ -191,17 +188,14 @@ public class FontRenderer {
                 continue;
             }
 
-            float yOffset = downCharacters.contains(String.valueOf(c)) ? 15 * scale : 0;
-            yOffset = upCharacters.contains(String.valueOf(c)) ? -40 * scale : yOffset;
-            yOffset = midCharacters.contains(String.valueOf(c)) ? -20 * scale : yOffset;
-
+            float yOffset = FontLoader.getYOffset(c, scale);
 
             Transform transform = new Transform(currentX, currentY - yOffset, character.width, character.height);
             transform = MathUtil.normalizeTransform(transform);
+
             fontBatch.addCharacter(transform.position.x, transform.position.y, scale, transform.scale.x, transform.scale.y, color,
                     character.getTexCoords(fontLoader.imageWidth, fontLoader.imageHeight));
-//            fontBatch.addCharacter(currentX, currentY - yOffset, scale, character.width, character.height, color,
-//                    character.getTexCoords(fontLoader.imageWidth, fontLoader.imageHeight));
+
             currentX += character.xAdvance * scale;
 
         }

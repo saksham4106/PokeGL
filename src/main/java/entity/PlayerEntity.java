@@ -60,10 +60,7 @@ public class PlayerEntity extends GameObject {
     private final World world;
     private PokemonEntity targetPokemon = null;
     private Scene scene;
-
     private ButtonObject battleButton;
-
-
     private final Random random = new Random();
 
     public PlayerEntity(String name, int width, int height, Vector2f position, int zIndex, Texture texture, World world){
@@ -80,7 +77,6 @@ public class PlayerEntity extends GameObject {
         this(name, (int)transform.scale.x, (int)transform.scale.y, transform.position, 0, texture, world);
     }
 
-//    GameObject dialogBox;
 
     @Override
     public void init() {
@@ -143,6 +139,10 @@ public class PlayerEntity extends GameObject {
         if(KeyEventListener.isKeyPressed(GLFW_KEY_B) && scene.containsGameObject(battleButton)){
             startBattle();
         }
+
+        if(KeyEventListener.isKeyPressed(GLFW_KEY_SPACE)){
+            // particles
+        }
     }
 
     public boolean isColliding(Transform transform){
@@ -157,10 +157,6 @@ public class PlayerEntity extends GameObject {
 
     @Override
     public void tick(){
-//        if(dialogBox != null){
-//            dialogBox.getTransform().position.add(0, 0.01f);
-//            dialogBox.markDirty(true);
-//        }
         pokemonSpawnCounter--;
 
         if(pokemonSpawnCounter <= 0){
@@ -191,8 +187,6 @@ public class PlayerEntity extends GameObject {
                         battleButton = new ButtonObject(200, 50, "\t\tBattle " + targetPokemon.name + "!\t\t",
                                 this::startBattle);
                         scene.addGameObjectToScene(battleButton);
-//                        dialogBox = new GameObject(0,-100, Window.width, 200, new Sprite(ColorUtils.WHITE), true, 100 );
-//                        scene.addGameObjectToScene(dialogBox);
                     }
                 }
             }

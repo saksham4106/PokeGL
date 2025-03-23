@@ -21,7 +21,7 @@ public class Sprite {
         this.width = sprite.width;
         this.height = sprite.height;
         this.texture = sprite.texture;
-        this.color = sprite.color;
+        this.color = new Vector4f(sprite.color);
         this.texCoords = sprite.texCoords;
     }
 
@@ -29,7 +29,11 @@ public class Sprite {
         this.width = width;
         this.height = height;
         this.texture = texture;
-        this.color = color;
+        this.color = new Vector4f(color);
+    }
+
+    public Sprite(Texture texture, Vector4f color){
+        this(0, 0 , texture, color);
     }
 
     public Sprite(Texture texture){
@@ -68,9 +72,6 @@ public class Sprite {
     public Vector2f[] getTexCoords() {
         return texCoords;
     }
-
-
-
 
 }
 

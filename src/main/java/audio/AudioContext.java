@@ -13,6 +13,7 @@ public class AudioContext {
     public String defaultDeviceName;
     public long audioDevice;
     public long audioContext;
+
     public void initialise(){
         defaultDeviceName = alcGetString(0, ALC_DEFAULT_DEVICE_SPECIFIER);
         audioDevice = alcOpenDevice(defaultDeviceName);

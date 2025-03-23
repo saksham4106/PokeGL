@@ -4,10 +4,8 @@ import entity.EntityFacing;
 import entity.PlayerEntity;
 import entity.PokemonEntity;
 import fonts.Fonts;
-import game.Camera;
-import game.GameObject;
-import game.Transform;
-import game.Window;
+import game.*;
+import game.components.FadeOutComponent;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 import pokemon.Pokemons;
@@ -76,22 +74,14 @@ public class WildBattleScene extends Scene {
 
         List<PokemonMove> moves = pok.moves;
 
-//        ButtonObject move1 = new ButtonObject(100, 10, () -> playerAttack(moves.get(0)), new Sprite(200, 75, new Vector4f(0.3f, 0.3f, 0.3f, 1)), 2);
-//        TextObject t1 = new TextObject(120, 30, 0.2f, moves.get(0).name, Fonts.OPEN_SANS_FONT, 3, true, ColorUtils.BLACK);
-//        ButtonObject move2 = new ButtonObject(300, 10, () -> playerAttack(moves.get(1)), new Sprite(200, 75, new Vector4f(0.3f, 0.3f, 0.3f, 1)), 2);
-//        TextObject t2 = new TextObject(320, 30, 0.2f, moves.get(1).name, Fonts.OPEN_SANS_FONT, 3, true, ColorUtils.BLACK);
-//        ButtonObject move3 = new ButtonObject(500, 10, () -> playerAttack(moves.get(2)), new Sprite(200, 75, new Vector4f(0.3f, 0.3f, 0.3f, 1)), 2);
-//        TextObject t3 = new TextObject(520, 30, 0.2f, moves.get(2).name + " ", Fonts.OPEN_SANS_FONT, 3, true, ColorUtils.BLACK);
-//        ButtonObject move4 = new ButtonObject(700, 10, () -> playerAttack(moves.get(3)), new Sprite(200, 75, new Vector4f(0.3f, 0.3f, 0.3f, 1)), 2);
-//        TextObject t4 = new TextObject(720, 30, 0.2f, moves.get(3).name + " ", Fonts.OPEN_SANS_FONT, 3, true, ColorUtils.BLACK);
         float h = Fonts.ATARI_CLASSIC_FONT.getMaxHeight(0.2f) + 5;
 
         float start = 50;
         float gap = 20;
-        ButtonObject move1 = new ButtonObject(start,  10, moves.get(0).getFormattedName(), 0.2f, () -> playerAttack(moves.get(0)), new Sprite(100,h, ColorUtils.getColor(0.7f)), 3);
-        ButtonObject move2 = new ButtonObject(start + move1.getSprite().width + gap, 10, moves.get(1).getFormattedName(), 0.2f, () -> playerAttack(moves.get(1)), new Sprite(100,h, ColorUtils.getColor(0.7f)), 3);
-        ButtonObject move3 = new ButtonObject(start + move2.getSprite().width + gap, 10, moves.get(2).getFormattedName(), 0.2f, () -> playerAttack(moves.get(2)), new Sprite(100,h, ColorUtils.getColor(0.7f)), 3);
-        ButtonObject move4 = new ButtonObject(start + move3.getSprite().width + gap, 10, moves.get(3).getFormattedName(), 0.2f, () -> playerAttack(moves.get(3)), new Sprite(100,h, ColorUtils.getColor(0.7f)), 3);
+        ButtonObject move1 = new ButtonObject(start,                                                                 10, moves.get(0).getFormattedName(),  0.2f, () -> playerAttack(moves.get(0)), new Sprite(100,h, ColorUtils.getColor(0.7f)), 3);
+        ButtonObject move2 = new ButtonObject(move1.getTransform().position.x + move1.getSprite().width + gap, 10, moves.get(1).getFormattedName(), 0.2f, () -> playerAttack(moves.get(1)), new Sprite(100,h, ColorUtils.getColor(0.7f)), 3);
+        ButtonObject move3 = new ButtonObject(move2.getTransform().position.x + move2.getSprite().width + gap, 10, moves.get(2).getFormattedName(), 0.2f, () -> playerAttack(moves.get(2)), new Sprite(100,h, ColorUtils.getColor(0.7f)), 3);
+        ButtonObject move4 = new ButtonObject(move3.getTransform().position.x + move3.getSprite().width + gap, 10, moves.get(3).getFormattedName(), 0.2f, () -> playerAttack(moves.get(3)), new Sprite(100,h, ColorUtils.getColor(0.7f)), 3);
         addGameObjectstoScene(move1,move2,move3,move4);
 
         ButtonObject ball1 = new ButtonObject(800, 20, () -> throwPokeball(Pokeball.POKEBALL), new Sprite(30, 30, Assets.getTexture("assets/textures/poke_ball.png")), 3);
@@ -113,8 +103,21 @@ public class WildBattleScene extends Scene {
     private void playerAttack(PokemonMove move){
         if(playerWon.isEmpty()){
             int damage = generateAttackDamage(move, this.oppPok, this.pok);
+
+            this.pokMsg = this.pok.name + " played " + move.name + "\n dealing " + damage + " HP damage";
+
+            GameObject cloud = new GameObject(Window.width / 2f - 200, Window.height / 2f - 200, 500, 500, new Sprite(Assets.getTexture("assets/img.png"), move.type.color), true, 9);
+            TextObject msg = new TextObject(Window.width / 2f - 120, Window.height / 2f + 80, 0.2f, pokMsg, Fonts.ATARI_CLASSIC_FONT, 10,  true, ColorUtils.BLACK);
+
+            msg.charObjects.forEach(gameObject -> {
+                gameObject.components.add(new FadeOutComponent(gameObject, new Vector2f(0, 0), 2, 1));
+            });
+
+            cloud.components.add(new FadeOutComponent(cloud, new Vector2f(0,0), 2, 1));
+            this.addText(msg);
+            addGameObjectToScene(cloud);
             damageOpp(damage);
-            this.pokMsg = this.pok.name + " played " + move.name + " dealing " + damage + " HP damage";
+
             evaluateWinner();
             if(playerWon.isEmpty()) oppAttack();
         }
@@ -195,7 +198,6 @@ public class WildBattleScene extends Scene {
 
             }
 
-
         }else if(oppPok.hp == 0){
             oppMsg += "\n" + oppPok.name + " fainted";
             pokMsg += "\n" + pok.name + " won!";
@@ -273,7 +275,7 @@ public class WildBattleScene extends Scene {
                 addGameObjectToScene(bg);
                 TextObject t = new TextObject(100, 400, 0.7f, "Congratulations! You caught a " + oppPok.name, Fonts.LEAGUE_SPARTA_FONT,
                         11, true, ColorUtils.BLACK);
-                renderer.addText(t);
+                this.addText(t);
                 addGameObjectToScene(new ButtonObject(300, 300, "Go back to main scene",
                         () -> exitBattle(), new Sprite(new Vector4f(0.5f)), 11));
 
@@ -311,10 +313,10 @@ public class WildBattleScene extends Scene {
         this.renderer.drawString(pokMsg, 800, 100, 0.2f, Fonts.LEAGUE_SPARTA_FONT, ColorUtils.BLACK, false);
         this.renderer.drawString(oppMsg, 100, 600, 0.2f, Fonts.LEAGUE_SPARTA_FONT, ColorUtils.BLACK, false);
 
-        this.renderer.drawString(String.valueOf(player.poke_balls), 800 + 9f, 5, 0.15f, Fonts.LEAGUE_SPARTA_FONT, ColorUtils.BLACK, false);
-        this.renderer.drawString(String.valueOf(player.super_balls), 850 + 9f, 5, 0.15f, Fonts.LEAGUE_SPARTA_FONT, ColorUtils.BLACK, false);
-        this.renderer.drawString(String.valueOf(player.ultra_balls), 900 + 9f, 5, 0.15f, Fonts.LEAGUE_SPARTA_FONT, ColorUtils.BLACK, false);
-        this.renderer.drawString(String.valueOf(player.master_balls), 950 + 9f, 5, 0.15f, Fonts.LEAGUE_SPARTA_FONT, ColorUtils.BLACK, false);
+        this.renderer.drawString(String.valueOf(player.poke_balls), 805 + 9f, 5, 0.15f, Fonts.LEAGUE_SPARTA_FONT, ColorUtils.BLACK, false);
+        this.renderer.drawString(String.valueOf(player.super_balls), 855 + 9f, 5, 0.15f, Fonts.LEAGUE_SPARTA_FONT, ColorUtils.BLACK, false);
+        this.renderer.drawString(String.valueOf(player.ultra_balls), 905 + 9f, 5, 0.15f, Fonts.LEAGUE_SPARTA_FONT, ColorUtils.BLACK, false);
+        this.renderer.drawString(String.valueOf(player.master_balls), 955 + 9f, 5, 0.15f, Fonts.LEAGUE_SPARTA_FONT, ColorUtils.BLACK, false);
 
 
 

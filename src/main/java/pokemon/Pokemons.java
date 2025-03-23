@@ -44,6 +44,7 @@ public class Pokemons{
     public static Sprite[] getPokemonSprite(int id){
         Sprite backSprite = backSpritesheet.sprites.get(id - 1);
         Sprite frontSprite = frontSpritesheet.sprites.get(id - 1);
+
         if(noBackSprite.contains(id)){
             backSprite = Utils.flip(frontSprite);
         }

@@ -41,6 +41,7 @@ public class Pokemon {
 
     }
 
+    // FIXME
     public List<PokemonMove> generateMoves(){
         List<PokemonMove> moves = new ArrayList<>();
         Collections.shuffle(normal_moves, Utils.random);

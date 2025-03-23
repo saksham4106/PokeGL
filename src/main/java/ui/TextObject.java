@@ -3,7 +3,7 @@ package ui;
 import fonts.Character;
 import fonts.FontLoader;
 import fonts.Fonts;
-import fonts.Text;
+import game.components.Component;
 import game.GameObject;
 import game.Transform;
 import org.joml.Vector2f;
@@ -18,6 +18,7 @@ import java.util.List;
 
 // FIXME: 15/05/22  THIS IS SHIT. implement SDF rendering
 public class TextObject {
+
     public final FontLoader fontLoader;
     public String text;
 
@@ -38,7 +39,6 @@ public class TextObject {
     }
 
     public TextObject(float x, float y, float scale, String text, FontLoader fontLoader, int zIndex, boolean isUIElement, Vector4f color) {
-        super();
         this.fontLoader = fontLoader;
         this.text = text;
         this.x = x;
@@ -47,30 +47,25 @@ public class TextObject {
         this.zIndex = zIndex;
         this.isUIElement = isUIElement;
         this.charObjects = new ArrayList<>();
-        this.color = color;
+        this.color = new Vector4f(color);
+
         generateText();
     }
 
-    public TextObject(int x, int y, Text text, int zIndex, boolean isUIElement){
-        this(x, y, text.scale, text.getText(), text.getFontLoader(), zIndex, isUIElement, text.getColor());
-    }
-
     private void generateText(){
-        float y = this.y;
         Sprite sprite = new Sprite(0, 0, Assets.getTexture(fontLoader.imagePath));
 
+        float currentY = this.y;
         float currentX = this.x;
 
         // FIXME: 15/05/22 Find a better way to do this
-        String downCharacters = "qypgj";
-        String upCharacters = "\"'";
-        String midCharacters = "-";
         spacePadding = fontLoader.getCharacter(' ').xAdvance * scale;
 
         for(int charIndex = 0; charIndex < text.length(); charIndex++){
             char c = text.charAt(charIndex);
+
             if(c == '\n'){
-                y -= fontLoader.lineHeight * scale;
+                currentY -= fontLoader.lineHeight * scale;
                 currentX = this.x;
                 continue;
             }else if(c == '\t'){
@@ -78,15 +73,15 @@ public class TextObject {
                 this.totalWidth += spacePadding * 4;
                 continue;
             }
+
             Character character = fontLoader.getCharacter(c);
             sprite = new Sprite(character.width, character.height, sprite.texture);
             sprite.setTexCoords(character.getTexCoords(fontLoader.imageWidth, fontLoader.imageHeight));
             sprite.color = color;
-            float yOffset = downCharacters.contains(String.valueOf(c)) ? 15 * scale : 0;
-            yOffset = upCharacters.contains(String.valueOf(c)) ? -40 * scale : yOffset;
-            yOffset = midCharacters.contains(String.valueOf(c)) ? -20 * scale : yOffset;
 
-            Transform newTransform = new Transform(currentX, y - yOffset, character.width * scale, character.height * scale);
+            float yOffset = FontLoader.getYOffset(c, scale);
+
+            Transform newTransform = new Transform(currentX, currentY - yOffset, character.width * scale, character.height * scale);
             GameObject gameObject = new GameObject(newTransform, sprite, zIndex);
 
             gameObject.setUIElement(isUIElement);
@@ -94,20 +89,17 @@ public class TextObject {
                 gameObject.setTransform(gameObject.getTransform());
             }
             this.charObjects.add(gameObject);
+
             currentX += character.xAdvance * scale;
             totalWidth += character.xAdvance * scale;
             this.bottomEnd = Math.max(bottomEnd, yOffset);
             totalHeight = Math.max(totalHeight, character.height * scale + yOffset);
         }
-
-
     }
-
 
     public void markDirty(boolean isDirty){
         this.charObjects.forEach(gameObject -> gameObject.markDirty(isDirty));
     }
-
     
     public void setColor(Vector4f color){
         this.charObjects.forEach(gameObject -> gameObject.getSprite().color = color);
@@ -115,7 +107,7 @@ public class TextObject {
     }
 
     public void addPos(Vector2f pos){
-        this.charObjects.forEach(gameObject -> gameObject.addPosition(pos));
+        this.charObjects.forEach(gameObject -> gameObject.getTransform().position.add(pos));
         markDirty(true);
     }
 
@@ -125,7 +117,8 @@ public class TextObject {
         markDirty(true);
     }
 
-
-
+    public void addComponent(Component component){
+        this.charObjects.forEach(gameObject -> gameObject.components.add(component));
+    }
 
 }

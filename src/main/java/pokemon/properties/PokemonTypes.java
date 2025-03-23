@@ -1,30 +1,33 @@
 package pokemon.properties;
 
+import org.joml.Vector4f;
+import utils.ColorUtils;
+
 import java.util.HashMap;
 import java.util.Map;
 
 public class PokemonTypes {
     public static final Map<String, PokemonType> types = new HashMap<>();
 
-    public static final PokemonType FLYING = register("flying");
-    public static final PokemonType GROUND = register("ground");
-    public static final PokemonType NORMAL = register("normal");
-    public static final PokemonType FIGHTING = register("fighting");
-    public static final PokemonType POISON = register("poison");
-    public static final PokemonType ROCK = register("rock");
-    public static final PokemonType BUG = register("bug");
-    public static final PokemonType GHOST = register("ghost");
-    public static final PokemonType STEEL = register("steel");
-    public static final PokemonType FIRE = register("fire");
-    public static final PokemonType GRASS = register("grass");
-    public static final PokemonType ELECTRIC = register("electric");
-    public static final PokemonType ICE = register("ice");
-    public static final PokemonType DRAGON = register("dragon");
-    public static final PokemonType FAIRY = register("fairy");
-    public static final PokemonType PSYCHIC = register("psychic");
-    public static final PokemonType WATER = register("water");
-    public static final PokemonType DARK = register("dark");
-    
+    public static final PokemonType FLYING = register("flying", ColorUtils.Flying);
+    public static final PokemonType GROUND = register("ground", ColorUtils.Ground);
+    public static final PokemonType NORMAL = register("normal", ColorUtils.Normal);
+    public static final PokemonType FIGHTING = register("fighting", ColorUtils.Fighting);
+    public static final PokemonType POISON = register("poison", ColorUtils.Poison);
+    public static final PokemonType ROCK = register("rock", ColorUtils.Rock);
+    public static final PokemonType BUG = register("bug", ColorUtils.Bug);
+    public static final PokemonType GHOST = register("ghost", ColorUtils.Ghost);
+    public static final PokemonType STEEL = register("steel", ColorUtils.Steel);
+    public static final PokemonType FIRE = register("fire", ColorUtils.Fire);
+    public static final PokemonType GRASS = register("grass", ColorUtils.Grass);
+    public static final PokemonType ELECTRIC = register("electric", ColorUtils.Electric);
+    public static final PokemonType ICE = register("ice", ColorUtils.Ice);
+    public static final PokemonType DRAGON = register("dragon", ColorUtils.Dragon);
+    public static final PokemonType FAIRY = register("fairy", ColorUtils.Fairy);
+    public static final PokemonType PSYCHIC = register("psychic", ColorUtils.Psychic);
+    public static final PokemonType WATER = register("water", ColorUtils.Water);
+    public static final PokemonType DARK = register("dark", ColorUtils.Dark);
+
 
 
     static {
@@ -68,8 +71,9 @@ public class PokemonTypes {
 
     }
 
-    public static PokemonType register(String name){
+    public static PokemonType register(String name, Vector4f color){
         PokemonType t = new PokemonType(name);
+        t.color = color;
         types.put(name, t);
         return t;
     }

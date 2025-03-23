@@ -11,7 +11,6 @@ import org.joml.Vector4f;
 import renderer.Renderer;
 import renderer.Sprite;
 import utils.Assets;
-import collision.CollisionDetection;
 import utils.ColorUtils;
 import utils.MathUtil;
 import utils.Utils;
@@ -28,11 +27,11 @@ public class ButtonObject extends GameObject {
     public boolean disabled = false;
 
     public ButtonObject(float startX, float startY, String label, IClickable onClick){
-        this(startX, startY, label, onClick, new Sprite(0, 0, new Vector4f(0.5f, 0.5f, 0.5f, 0.7f)), 1);
+        this(startX, startY, label, onClick, new Sprite(0, 0, new Vector4f(0.5f, 0.5f, 0.5f, 0.6f)));
     }
 
     public ButtonObject(float startX, float startY, String label, IClickable onClick, Sprite sprite){
-        this(startX, startY, label, onClick, sprite, 25);
+        this(startX, startY, label, onClick, sprite, 2);
     }
 
     public ButtonObject(float startX, float startY, IClickable onClick, Sprite sprite, int zIndex) {
@@ -49,6 +48,7 @@ public class ButtonObject extends GameObject {
 
     public ButtonObject(float startX, float startY, String label, float scale, IClickable onClick, Sprite sprite, int zIndex,
                         FontLoader fontLoader, Vector4f textColor){
+
         int xPadding = 5;
         int yPadding = 5;
         float buttonWidth = 0;
@@ -76,17 +76,18 @@ public class ButtonObject extends GameObject {
         buttonWidth = Math.max(buttonWidth, sprite.width) + 2 * xPadding;
         buttonHeight = Math.max(buttonHeight, sprite.height) + 2 * yPadding;
 
-        Transform transform = new Transform(startX, startY, buttonWidth, buttonHeight);
         sprite.width = buttonWidth;
         sprite.height = buttonHeight;
-
         this.sprite = sprite;
-        this.setUIElement(true);
-        this.zIndex = zIndex;
-        this.setTransform(transform);
 
         this.onClick = onClick;
         this.darkerColor = ColorUtils.shadeColorWithoutAlpha(this.sprite.color, shade);
+        this.zIndex = zIndex;
+
+        Transform transform = new Transform(startX, startY, buttonWidth, buttonHeight);
+        this.setTransform(transform);
+        this.setUIElement(true);
+
     }
 
 
@@ -97,7 +98,7 @@ public class ButtonObject extends GameObject {
             return;
         }
 
-        if(Utils.cursorInTransform(this.transform)){
+        if(Utils.cursorInTransform(MathUtil.normalizeTransform(this.transform))){
             onHover();
         }else{
             if(this.darkerColor.equals(this.sprite.color)){
@@ -106,12 +107,11 @@ public class ButtonObject extends GameObject {
         }
     }
 
-    int cooldown = 10;
+    int cooldown = 15;
     @Override
     public void tick() {
         super.tick();
         cooldown --;
-
     }
 
     public void onClick(){
@@ -119,9 +119,8 @@ public class ButtonObject extends GameObject {
             this.onClick.onClick();
             Sound sound = Assets.getSound("assets/sounds/buttonpress.ogg", new Sound("assets/sounds/buttonpress.ogg", false));
             sound.play();
-            cooldown = 10;
+            cooldown = 15;
         }
-
     }
 
     public void onHover(){
@@ -145,4 +144,5 @@ public class ButtonObject extends GameObject {
     public void disable(boolean disabled){
         this.disabled = disabled;
     }
+
 }

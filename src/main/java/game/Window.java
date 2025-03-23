@@ -11,7 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import scenes.Scene;
 import scenes.StartingMenuScene;
-import world.WorldScene;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -29,14 +28,14 @@ public class Window {
     public static int width, height;
     private final String title;
     private long window;
+
     public static Logger LOGGER = LoggerFactory.getLogger(Window.class);
-    private static Scene currentScene;
-    private static Map<String, Scene> scenes = new HashMap<>();
-    private static Stack<Scene> uiStack = new Stack<>();
-
-    public static AudioContext audioContext = new AudioContext();
-
     private boolean isResized = true;
+
+    private static Scene currentScene;
+    private static final Map<String, Scene> scenes = new HashMap<>();
+    private static final Stack<Scene> uiStack = new Stack<>();
+    public static AudioContext audioContext = new AudioContext();
 
     public Window() {
         width = 1366;
@@ -62,10 +61,9 @@ public class Window {
 
         if (!glfwInit()) LOGGER.error("Failed to initialize GLFW");
 
-
         glfwDefaultWindowHints();
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
-        glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
+//        glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 //        glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
 
         window = glfwCreateWindow(width, height, this.title, NULL, NULL);
@@ -90,7 +88,6 @@ public class Window {
             Window.height = height;
             this.isResized = true;
         });
-
 
 
         audioContext.initialise();

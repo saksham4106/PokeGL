@@ -11,6 +11,7 @@ import renderer.Renderer;
 import renderer.Sprite;
 import renderer.Texture;
 import ui.ButtonObject;
+import ui.TextObject;
 
 import java.util.*;
 
@@ -33,12 +34,21 @@ public abstract class Scene {
     public void addGameObjectToScene(GameObject gameObject){
         if(gameObject instanceof ButtonObject buttonObject){
             this.renderer.addButton(buttonObject);
+            if(buttonObject.textObject != null)  this.addText(buttonObject.textObject);
         }
         else{
             this.renderer.add(gameObject);
         }
         this.sceneGameObjects.add(gameObject);
     }
+
+    public void addText(TextObject textObject){
+        textObject.charObjects.forEach(gameObject -> {
+            this.renderer.add(gameObject);
+            this.sceneGameObjects.add(gameObject);
+        });
+    }
+
 
     public void addGameObjectstoScene(GameObject... gameObjects){
         for (GameObject gameObject : gameObjects) {
@@ -98,6 +108,7 @@ public abstract class Scene {
     public void tick(){
         GameObject[] gameObjects = sceneGameObjects.toArray(new GameObject[0]);
         for (int i = 0; i < gameObjects.length; i++) {
+            if(gameObjects[i].remove) removeGameObjectFromScene(gameObjects[i]);
             gameObjects[i].tick();
         }
     }

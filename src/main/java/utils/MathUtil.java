@@ -29,10 +29,6 @@ public class MathUtil {
     }
 
     public static Vector2f screenToWorld(Vector2f worldCoordinates){
-//        float currentX = worldCoordinates.x;
-//        currentX = (2.0f * (currentX / Window.width)) - 1.0f;
-//        float currentY = worldCoordinates.y;
-//        currentY = (2.0f * (1.0f - (currentY / Window.height))) - 1;
         Vector2f position = normalizePosition(worldCoordinates);
 
         Camera camera = Window.getCurrentScene().camera;
