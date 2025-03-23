@@ -1,4 +1,4 @@
-package utils;
+package helperScripts;
 
 import javax.imageio.ImageIO;
 import java.awt.*;

@@ -3,7 +3,7 @@ import json
 import random
 s = requests.session()
 
-with open('Pokemons.java', 'utils.a') as f:
+with open('helperScripts..java', 'utils.a') as f:
     f2 = open('movesData.json', 'r')
     data = json.loads(f2.read())
     for i in range(1, 925):

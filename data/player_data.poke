@@ -1,0 +1,6 @@
+name:Saksham4106
+position:2330.933105|-998.755249
+zIndex:1
+poketeam:{id:4,name:charmander,max_hp:39,attack:52,defence:43,speed:65,xp:1250,level:10,types:fire,moves:fire_pledge|fire_blast|skull_bash|flamethrower~id:460,name:abomasnow,max_hp:90,attack:92,defence:75,speed:60,xp:17280,level:24,types:grass|ice,moves:energy_ball|grass_whistle|frost_breath|hyper_beam~id:598,name:ferrothorn,max_hp:74,attack:94,defence:131,speed:20,xp:27440,level:28,types:grass|steel,moves:energy_ball|worry_seed|metal_claw|swords_dance~id:716,name:xerneas,max_hp:126,attack:131,defence:95,speed:99,xp:219520,level:56,types:fairy,moves:play_rough|draining_kiss|secret_power|draining_kiss}
+pokemons:{id:4,name:charmander,max_hp:39,attack:52,defence:43,speed:65,xp:1250,level:10,types:fire,moves:fire_pledge|fire_blast|skull_bash|flamethrower~id:460,name:abomasnow,max_hp:90,attack:92,defence:75,speed:60,xp:17280,level:24,types:grass|ice,moves:energy_ball|grass_whistle|frost_breath|hyper_beam~id:598,name:ferrothorn,max_hp:74,attack:94,defence:131,speed:20,xp:27440,level:28,types:grass|steel,moves:energy_ball|worry_seed|metal_claw|swords_dance~id:716,name:xerneas,max_hp:126,attack:131,defence:95,speed:99,xp:219520,level:56,types:fairy,moves:play_rough|draining_kiss|secret_power|draining_kiss}
+pokeballs:18,4,3,0
