@@ -9,12 +9,14 @@ public class FadeOutComponent extends Component {
     private float life;
     private final float scale;
     private Vector2f endPosition;
+    private onFade onFade;
 
-    public FadeOutComponent(GameObject gameObject, Vector2f endPosition, float time, float scale) {
+    public FadeOutComponent(GameObject gameObject, Vector2f endPosition, float time, float scale, onFade onFade) {
         this.gameObject = gameObject;
         this.time = time;
         this.scale = scale;
         this.endPosition = endPosition;
+        this.onFade = onFade;
     }
 
     private void init() {
@@ -46,6 +48,7 @@ public class FadeOutComponent extends Component {
 
 //        System.out.println(life);
         if(life < 0){
+            this.onFade.onFade();
             gameObject.remove = true;
         }
 
@@ -64,7 +67,11 @@ public class FadeOutComponent extends Component {
     }
 
     private float curve(float x){
-        return (float) (1 - Math.pow(1 - x, 5));
+        return (float) (1 - Math.pow(1 - x, 9));
 
+    }
+
+    public interface onFade{
+        void onFade();
     }
 }

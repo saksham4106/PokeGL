@@ -6,7 +6,5 @@ out/
 gradlew
 gradlew.bat
 
-
-
-
 /src/main/resources/assets/pokemonImages/
+/data/

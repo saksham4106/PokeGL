@@ -106,29 +106,41 @@ public class WildBattleScene extends Scene {
 
             this.pokMsg = this.pok.name + " played " + move.name + "\n dealing " + damage + " HP damage";
 
-            GameObject cloud = new GameObject(Window.width / 2f - 200, Window.height / 2f - 200, 500, 500, new Sprite(Assets.getTexture("assets/img.png"), move.type.color), true, 9);
-            TextObject msg = new TextObject(Window.width / 2f - 120, Window.height / 2f + 80, 0.2f, pokMsg, Fonts.ATARI_CLASSIC_FONT, 10,  true, ColorUtils.BLACK);
+            GameObject cloud = new GameObject(Window.width / 2f - 250, Window.height / 2f - 250, 600, 600, new Sprite(Assets.getTexture("assets/img.png"), move.type.color), true, 9);
+            TextObject msg = new TextObject(Window.width / 2f - 140, Window.height / 2f + 80, 0.2f, pokMsg, Fonts.ATARI_CLASSIC_FONT, 10,  true, ColorUtils.BLACK);
 
-            msg.charObjects.forEach(gameObject -> {
-                gameObject.components.add(new FadeOutComponent(gameObject, new Vector2f(0, 0), 2, 1));
-            });
+            msg.charObjects.forEach(gameObject -> gameObject.components.add(new FadeOutComponent(gameObject, new Vector2f(0, 0), 2.5f, 1, () -> {})));
+            cloud.components.add(new FadeOutComponent(cloud, new Vector2f(0,0), 2.5f, 1, () -> {if(playerWon.isEmpty()) oppAttack();}));
 
-            cloud.components.add(new FadeOutComponent(cloud, new Vector2f(0,0), 2, 1));
             this.addText(msg);
             addGameObjectToScene(cloud);
+
+
             damageOpp(damage);
 
             evaluateWinner();
-            if(playerWon.isEmpty()) oppAttack();
+
         }
     }
 
     private void oppAttack(){
         PokemonMove move = Utils.getRandomElement(oppPok.moves);
         int damage = generateAttackDamage(move, pok, oppPok);
+
+
         damagePlayer(damage);
-        this.oppMsg = this.oppPok.name + " played " + move.name + " dealing " + damage + " HP damage";
-        evaluateWinner();
+        this.oppMsg = this.oppPok.name + " played " + move.name + "\n dealing " + damage + " HP damage";
+
+        GameObject cloud = new GameObject(Window.width / 2f - 250, Window.height / 2f - 250, 600, 600, new Sprite(Assets.getTexture("assets/img.png"), move.type.color), true, 9);
+        TextObject msg = new TextObject(Window.width / 2f - 140, Window.height / 2f + 80, 0.2f, oppMsg, Fonts.ATARI_CLASSIC_FONT, 10,  true, ColorUtils.BLACK);
+
+        msg.charObjects.forEach(gameObject -> gameObject.components.add(new FadeOutComponent(gameObject, new Vector2f(0, 0), 2.5f, 1, () -> {})));
+        cloud.components.add(new FadeOutComponent(cloud, new Vector2f(0,0), 2.5f, 1, this::evaluateWinner));
+
+        this.addText(msg);
+        this.addGameObjectToScene(cloud);
+
+//        evaluateWinner();
     }
 
     private int generateAttackDamage(PokemonMove move, PokemonEntity enemy, PokemonEntity self){
@@ -310,8 +322,8 @@ public class WildBattleScene extends Scene {
         this.renderer.drawString("HP: " + pok.hp + "/" + pok.max_hp,
                 260 , 105, 0.15f, Fonts.LEAGUE_SPARTA_FONT, ColorUtils.BLACK, false);
 
-        this.renderer.drawString(pokMsg, 800, 100, 0.2f, Fonts.LEAGUE_SPARTA_FONT, ColorUtils.BLACK, false);
-        this.renderer.drawString(oppMsg, 100, 600, 0.2f, Fonts.LEAGUE_SPARTA_FONT, ColorUtils.BLACK, false);
+//        this.renderer.drawString(pokMsg, 800, 100, 0.2f, Fonts.LEAGUE_SPARTA_FONT, ColorUtils.BLACK, false);
+//        this.renderer.drawString(oppMsg, 100, 600, 0.2f, Fonts.LEAGUE_SPARTA_FONT, ColorUtils.BLACK, false);
 
         this.renderer.drawString(String.valueOf(player.poke_balls), 805 + 9f, 5, 0.15f, Fonts.LEAGUE_SPARTA_FONT, ColorUtils.BLACK, false);
         this.renderer.drawString(String.valueOf(player.super_balls), 855 + 9f, 5, 0.15f, Fonts.LEAGUE_SPARTA_FONT, ColorUtils.BLACK, false);
